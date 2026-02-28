@@ -192,7 +192,9 @@
   font-size: 1rem;
 }
 
-.user-info { flex: 1; }
+.user-info {
+  flex: 1;
+}
 
 .user-name {
   font-weight: 600;
@@ -456,8 +458,13 @@
    ======================================== */
 
 @media (min-width: 992px) {
-  .desktop-only { display: flex; }
-  .mobile-only { display: none; }
+  .desktop-only {
+    display: flex;
+  }
+
+  .mobile-only {
+    display: none;
+  }
 }
 
 @media (max-width: 991px) {
