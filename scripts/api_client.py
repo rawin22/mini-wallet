@@ -6,11 +6,16 @@ so individual scripts stay focused on their specific tasks.
 
 import os
 import sys
+from pathlib import Path
 
 import requests
+from dotenv import load_dotenv
 
-BASE_URL = os.environ.get("WALLET_API_URL", "https://www.bizcurrency.com:20200/api/v1")
-CALLER_ID = os.environ.get("WALLET_CALLER_ID", "819640E9-8DF1-4DB9-B13B-E9DCDDEEBA58")
+# Load .env from the same directory as this module
+load_dotenv(Path(__file__).resolve().parent / ".env")
+
+BASE_URL = os.environ.get("WALLET_API_URL", "https://www.bizcurrency.com:20500/api/v1")
+CALLER_ID = os.environ.get("WALLET_CALLER_ID", "12FDEC27-6E1F-4EC5-BF15-1C7E75A99117")
 
 
 def get_credentials() -> tuple[str, str]:

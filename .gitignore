@@ -4,3 +4,4 @@
 .envp3-virothrachs/
 uv.lock
 .env
+scripts/.env
