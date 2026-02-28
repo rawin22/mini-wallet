@@ -16,6 +16,21 @@
   width: 100%;
   max-width: 420px;
   padding: 40px;
+  position: relative;
+}
+
+.auth-theme-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: 1px solid #d0d3db;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #364152;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .login-header {

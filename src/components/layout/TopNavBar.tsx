@@ -15,7 +15,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ onToggleSidebar, onToggleM
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem(THEME_KEY) as 'light' | 'dark') || 'dark';
+    return (localStorage.getItem(THEME_KEY) as 'light' | 'dark') || 'light';
   });
 
   useEffect(() => {

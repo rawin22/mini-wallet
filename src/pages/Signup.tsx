@@ -1,6 +1,8 @@
-import React, { useState, type FormEvent } from 'react';
+import React, { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Signup.css';
+
+const THEME_KEY = 'app_theme';
 
 interface SignupFormState {
     username: string;
@@ -31,11 +33,20 @@ export const Signup: React.FC = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+        return (localStorage.getItem(THEME_KEY) as 'light' | 'dark') || 'light';
+    });
     const navigate = useNavigate();
-    const storedTheme = localStorage.getItem('app_theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDarkTheme = storedTheme ? storedTheme === 'dark' : prefersDark;
-    const logoSrc = isDarkTheme ? '/winstantpay-logo-light.png' : '/winstantpay-logo.png';
+    const logoSrc = theme === 'dark' ? '/winstantpay-logo-light.png' : '/winstantpay-logo.png';
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem(THEME_KEY, theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme((current) => (current === 'light' ? 'dark' : 'light'));
+    };
 
     const updateField = (field: keyof SignupFormState, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
@@ -63,6 +74,10 @@ export const Signup: React.FC = () => {
     return (
         <div className="signup-container">
             <div className="signup-card">
+                <button className="auth-theme-toggle" onClick={toggleTheme} type="button" aria-label="Toggle theme">
+                    {theme === 'light' ? '☀️ Light' : '🌙 Dark'}
+                </button>
+
                 <header className="signup-header">
                     <img src={logoSrc} alt="WinstantPay" className="signup-brand-logo" />
                     <h1 className="signup-title">Sign Up with Us</h1>

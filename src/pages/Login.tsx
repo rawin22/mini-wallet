@@ -1,7 +1,9 @@
-import React, { useState, type FormEvent } from 'react';
+import React, { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.ts';
 import '../styles/Login.css';
+
+const THEME_KEY = 'app_theme';
 
 export const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -9,12 +11,21 @@ export const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem(THEME_KEY) as 'light' | 'dark') || 'light';
+  });
   const { login } = useAuth();
   const navigate = useNavigate();
-  const storedTheme = localStorage.getItem('app_theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const isDarkTheme = storedTheme ? storedTheme === 'dark' : prefersDark;
-  const logoSrc = isDarkTheme ? '/winstantpay-logo-light.png' : '/winstantpay-logo.png';
+  const logoSrc = theme === 'dark' ? '/winstantpay-logo-light.png' : '/winstantpay-logo.png';
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((current) => (current === 'light' ? 'dark' : 'light'));
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,6 +45,10 @@ export const Login: React.FC = () => {
   return (
     <div className="login-container">
       <div className="login-box">
+        <button className="auth-theme-toggle" onClick={toggleTheme} type="button" aria-label="Toggle theme">
+          {theme === 'light' ? '☀️ Light' : '🌙 Dark'}
+        </button>
+
         <div className="login-header">
           <img src={logoSrc} alt="WinstantPay" className="login-brand-logo" />
           <p className="login-subtitle">Sign in to your wallet</p>
