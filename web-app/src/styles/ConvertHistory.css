@@ -1,0 +1,11 @@
+/* Convert History Page — placeholder styling, reuses .history-page from PaymentHistory.css */
+
+.history-page .no-data {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-muted);
+  font-size: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}

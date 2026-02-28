@@ -4,7 +4,9 @@
       "Bash(/home/ralf/src/private/winner/mini-wallet/.venv/bin/python -m ruff check /home/ralf/src/private/winner/mini-wallet/scripts/)",
       "Bash(ruff check /home/ralf/src/private/winner/mini-wallet/scripts/)",
       "Bash(git remote set-url origin rawin22:rawin22/mini-wallet.git)",
-      "Bash(/home/ralf/src/private/winner/mini-wallet/.venv/bin/python -m ruff check /home/ralf/src/private/winner/mini-wallet/scripts/fx_deal.py)"
+      "Bash(/home/ralf/src/private/winner/mini-wallet/.venv/bin/python -m ruff check /home/ralf/src/private/winner/mini-wallet/scripts/fx_deal.py)",
+      "Bash(npm run build)",
+      "Bash(npx eslint .)"
     ]
   }
 }
