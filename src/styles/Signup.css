@@ -32,6 +32,12 @@
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.auth-theme-toggle:hover {
+    border-color: var(--accent-blue);
+    color: var(--text-primary);
 }
 
 .signup-header {
@@ -100,6 +106,10 @@
     box-shadow: 0 0 0 3px rgba(27, 110, 194, 0.15);
 }
 
+.signup-input::placeholder {
+    color: var(--text-muted);
+}
+
 .signup-submit {
     height: 48px;
     border-radius: var(--radius-sm);
@@ -149,6 +159,11 @@
     color: var(--accent-blue);
     font-weight: 600;
     text-decoration: none;
+}
+
+.signup-footer-links a:hover,
+.text-button:hover {
+    text-decoration: underline;
 }
 
 .text-button {
