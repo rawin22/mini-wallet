@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { HELP_PAGE_SUBTITLE, HELP_PAGE_TITLE, HELP_SECTIONS, type HelpSection } from '../content/helpContent.ts';
+import { HELP_SECTIONS, type HelpSection } from '../content/helpContent.ts';
+import { useLanguage } from '../hooks/useLanguage.ts';
 import '../styles/Help.css';
 
 export const Help: React.FC = () => {
     const [query, setQuery] = useState('');
+    const { t } = useLanguage();
 
     const filteredSections = useMemo<HelpSection[]>(() => {
         const normalizedQuery = query.trim().toLowerCase();
@@ -14,13 +16,13 @@ export const Help: React.FC = () => {
         return HELP_SECTIONS
             .map((section) => {
                 const sectionMatch =
-                    section.title.toLowerCase().includes(normalizedQuery) ||
-                    section.intro?.toLowerCase().includes(normalizedQuery);
+                    t(section.titleKey).toLowerCase().includes(normalizedQuery) ||
+                    t(section.introKey || '').toLowerCase().includes(normalizedQuery);
 
                 const matchingItems = section.items.filter((item) => {
                     return (
-                        item.label.toLowerCase().includes(normalizedQuery) ||
-                        item.description.toLowerCase().includes(normalizedQuery)
+                        t(item.labelKey).toLowerCase().includes(normalizedQuery) ||
+                        t(item.descriptionKey).toLowerCase().includes(normalizedQuery)
                     );
                 });
 
@@ -35,13 +37,13 @@ export const Help: React.FC = () => {
                 return null;
             })
             .filter((section): section is HelpSection => section !== null);
-    }, [query]);
+    }, [query, t]);
 
     return (
         <div className="help-page">
             <header className="help-header">
-                <h1>{HELP_PAGE_TITLE}</h1>
-                <p>{HELP_PAGE_SUBTITLE}</p>
+                <h1>{t('help.title')}</h1>
+                <p>{t('help.subtitle')}</p>
 
                 <div className="help-search-wrap">
                     <input
@@ -49,29 +51,29 @@ export const Help: React.FC = () => {
                         className="help-search-input"
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
-                        placeholder="Search help topics..."
-                        aria-label="Search help topics"
+                        placeholder={t('help.searchPlaceholder')}
+                        aria-label={t('help.searchAria')}
                     />
                 </div>
             </header>
 
             {filteredSections.length === 0 && (
                 <div className="help-empty">
-                    No help topics match "{query}".
+                    {t('help.noResults', { query })}
                 </div>
             )}
 
             <div className="help-grid">
                 {filteredSections.map((section) => (
                     <article key={section.id} className="help-card">
-                        <h2>{section.title}</h2>
-                        {section.intro && <p className="help-intro">{section.intro}</p>}
+                        <h2>{t(section.titleKey)}</h2>
+                        {section.introKey && <p className="help-intro">{t(section.introKey)}</p>}
 
                         <ul className="help-list">
                             {section.items.map((item) => (
-                                <li key={item.label} className="help-item">
-                                    <h3>{item.label}</h3>
-                                    <p>{item.description}</p>
+                                <li key={item.labelKey} className="help-item">
+                                    <h3>{t(item.labelKey)}</h3>
+                                    <p>{t(item.descriptionKey)}</p>
                                 </li>
                             ))}
                         </ul>

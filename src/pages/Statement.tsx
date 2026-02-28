@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { statementService } from '../api/statement.service.ts';
+import { useLanguage } from '../hooks/useLanguage.ts';
 import { formatCurrency, formatDateTime } from '../utils/formatters.ts';
 import type { StatementResponse } from '../types/statement.types.ts';
 import '../styles/Statement.css';
@@ -14,6 +15,7 @@ const daysAgo = (days: number): string => {
 const today = (): string => new Date().toISOString().split('T')[0];
 
 export const Statement: React.FC = () => {
+  const { t } = useLanguage();
   const { accountId } = useParams<{ accountId: string }>();
   const [data, setData] = useState<StatementResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -38,12 +40,12 @@ export const Statement: React.FC = () => {
       const result = await statementService.getStatement(accountId, startDate, endDate);
       setData(result);
     } catch (err) {
-      setError('Failed to load statement.');
+      setError(t('statement.loadError'));
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }, [accountId, startDate, endDate]);
+  }, [accountId, startDate, endDate, t]);
 
   useEffect(() => { fetchStatement(); }, [fetchStatement]);
 
@@ -54,49 +56,49 @@ export const Statement: React.FC = () => {
 
   return (
     <div className="statement-page">
-      <h1>Account Statement</h1>
+      <h1>{t('statement.title')}</h1>
 
       <div className="statement-controls">
         <div className="date-presets">
           {['7', '30', '90'].map((d) => (
             <button key={d} className={`preset-btn ${preset === d ? 'active' : ''}`}
               onClick={() => handlePreset(d)}>
-              {d} days
+              {t('statement.days', { days: d })}
             </button>
           ))}
           <button className={`preset-btn ${preset === 'custom' ? 'active' : ''}`}
-            onClick={() => setPreset('custom')}>Custom</button>
+            onClick={() => setPreset('custom')}>{t('common.custom')}</button>
         </div>
         {preset === 'custom' && (
           <div className="custom-dates">
             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-            <span>to</span>
+            <span>{t('common.to')}</span>
             <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-            <button className="fetch-btn" onClick={fetchStatement}>Fetch</button>
+            <button className="fetch-btn" onClick={fetchStatement}>{t('common.fetch')}</button>
           </div>
         )}
       </div>
 
-      {loading && <div className="loading-spinner"><div className="spinner" /><p>Loading statement...</p></div>}
+      {loading && <div className="loading-spinner"><div className="spinner" /><p>{t('statement.loading')}</p></div>}
       {error && <div className="error-box"><p>{error}</p></div>}
 
       {!loading && !error && info && (
         <>
           <div className="account-info-bar">
             <div><strong>{info.accountName}</strong> ({info.accountCurrencyCode})</div>
-            <div>Account: {info.accountNumber}</div>
-            <div>Opening: {formatCurrency(info.beginningBalance)} | Closing: {formatCurrency(info.endingBalance)}</div>
+            <div>{t('statement.account')}: {info.accountNumber}</div>
+            <div>{t('statement.opening')}: {formatCurrency(info.beginningBalance)} | {t('statement.closing')}: {formatCurrency(info.endingBalance)}</div>
           </div>
 
           {entries.length === 0 ? (
-            <p className="no-data">No transactions found for this period.</p>
+            <p className="no-data">{t('statement.noTransactions')}</p>
           ) : (
             <>
               <table className="statement-table">
                 <thead>
                   <tr>
-                    <th>Date</th><th>Type</th><th>Description</th>
-                    <th className="num">Debit</th><th className="num">Credit</th><th className="num">Balance</th>
+                    <th>{t('statement.date')}</th><th>{t('statement.type')}</th><th>{t('statement.description')}</th>
+                    <th className="num">{t('statement.debit')}</th><th className="num">{t('statement.credit')}</th><th className="num">{t('statement.balance')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -113,9 +115,9 @@ export const Statement: React.FC = () => {
                 </tbody>
               </table>
               <div className="statement-summary">
-                <div className="summary-item debit">Total Debits: {formatCurrency(totalDebit)} {info.accountCurrencyCode}</div>
-                <div className="summary-item credit">Total Credits: {formatCurrency(totalCredit)} {info.accountCurrencyCode}</div>
-                <div className="summary-item net">Net Change: {formatCurrency(totalCredit - totalDebit)} {info.accountCurrencyCode}</div>
+                <div className="summary-item debit">{t('statement.totalDebits')}: {formatCurrency(totalDebit)} {info.accountCurrencyCode}</div>
+                <div className="summary-item credit">{t('statement.totalCredits')}: {formatCurrency(totalCredit)} {info.accountCurrencyCode}</div>
+                <div className="summary-item net">{t('statement.netChange')}: {formatCurrency(totalCredit - totalDebit)} {info.accountCurrencyCode}</div>
               </div>
             </>
           )}

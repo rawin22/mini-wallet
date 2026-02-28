@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { fxHistoryService } from '../api/fx-history.service.ts';
+import { useLanguage } from '../hooks/useLanguage.ts';
 import { formatDateTime } from '../utils/formatters.ts';
 import type { FxDealSearchRecord } from '../types/fx.types.ts';
 import '../styles/ConvertHistory.css';
 
 export const ConvertHistory: React.FC = () => {
+  const { t } = useLanguage();
   const [deals, setDeals] = useState<FxDealSearchRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,25 +19,25 @@ export const ConvertHistory: React.FC = () => {
         const result = await fxHistoryService.searchDeals();
         setDeals(result.fxDeals || []);
       } catch (err) {
-        setError('Failed to load exchange history.');
+        setError(t('history.exchangeLoadError'));
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
     fetchDeals();
-  }, []);
+  }, [t]);
 
   return (
     <div className="convert-history-page">
-      <h1>Exchange History</h1>
+      <h1>{t('history.exchangeTitle')}</h1>
 
-      {loading && <div className="loading-spinner"><div className="spinner" /><p>Loading...</p></div>}
+      {loading && <div className="loading-spinner"><div className="spinner" /><p>{t('common.loading')}</p></div>}
       {error && <div className="error-box"><p>{error}</p></div>}
 
       {!loading && !error && (
         deals.length === 0 ? (
-          <p className="no-data">No FX deals found.</p>
+          <p className="no-data">{t('history.noDeals')}</p>
         ) : (
           <div className="deals-list">
             {deals.map((deal) => (
@@ -47,26 +49,26 @@ export const ConvertHistory: React.FC = () => {
                 <div className="deal-card-body">
                   <div className="deal-conversion">
                     <div className="conversion-side sell">
-                      <span className="conversion-label">Sell</span>
+                      <span className="conversion-label">{t('history.sell')}</span>
                       <span className="conversion-amount">{deal.sellAmountTextWithCurrencyCode}</span>
                     </div>
                     <span className="conversion-arrow">&rarr;</span>
                     <div className="conversion-side buy">
-                      <span className="conversion-label">Buy</span>
+                      <span className="conversion-label">{t('history.buy')}</span>
                       <span className="conversion-amount">{deal.buyAmountTextWithCurrencyCode}</span>
                     </div>
                   </div>
                   <div className="deal-meta">
                     <div className="meta-item">
-                      <span className="meta-label">Rate</span>
+                      <span className="meta-label">{t('history.rate')}</span>
                       <span className="meta-value">{deal.bookedRateTextWithCurrencyCodes}</span>
                     </div>
                     <div className="meta-item">
-                      <span className="meta-label">Booked</span>
+                      <span className="meta-label">{t('history.booked')}</span>
                       <span className="meta-value">{formatDateTime(deal.bookedTime)}</span>
                     </div>
                     <div className="meta-item">
-                      <span className="meta-label">Value Date</span>
+                      <span className="meta-label">{t('history.valueDate')}</span>
                       <span className="meta-value">{deal.finalValueDate}</span>
                     </div>
                   </div>

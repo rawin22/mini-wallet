@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth.ts';
+import { useLanguage } from '../hooks/useLanguage.ts';
 import { paymentHistoryService } from '../api/payment-history.service.ts';
 import { formatCurrency, formatDateTime } from '../utils/formatters.ts';
 import type { PaymentSearchRecord } from '../types/payment.types.ts';
@@ -7,6 +8,7 @@ import '../styles/PaymentHistory.css';
 
 export const PaymentHistory: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [payments, setPayments] = useState<PaymentSearchRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,31 +22,31 @@ export const PaymentHistory: React.FC = () => {
         const result = await paymentHistoryService.searchPayments();
         setPayments(result.records?.payments || []);
       } catch (err) {
-        setError('Failed to load payment history.');
+        setError(t('history.paymentsLoadError'));
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
     fetchPayments();
-  }, [user]);
+  }, [user, t]);
 
   return (
     <div className="history-page">
-      <h1>Payment History</h1>
+      <h1>{t('history.paymentsTitle')}</h1>
 
-      {loading && <div className="loading-spinner"><div className="spinner" /><p>Loading...</p></div>}
+      {loading && <div className="loading-spinner"><div className="spinner" /><p>{t('common.loading')}</p></div>}
       {error && <div className="error-box"><p>{error}</p></div>}
 
       {!loading && !error && (
         payments.length === 0 ? (
-          <p className="no-data">No payments found.</p>
+          <p className="no-data">{t('history.noPayments')}</p>
         ) : (
           <table className="history-table">
             <thead>
               <tr>
-                <th>Date</th><th>Reference</th><th>From</th><th>To</th>
-                <th className="num">Amount</th><th>Status</th>
+                <th>{t('history.date')}</th><th>{t('history.reference')}</th><th>{t('history.from')}</th><th>{t('history.to')}</th>
+                <th className="num">{t('history.amount')}</th><th>{t('history.status')}</th>
               </tr>
             </thead>
             <tbody>

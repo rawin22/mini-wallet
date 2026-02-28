@@ -1,5 +1,7 @@
 import React, { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLanguage } from '../hooks/useLanguage.ts';
+import { LanguageSwitcher } from '../components/LanguageSwitcher.tsx';
 import '../styles/Signup.css';
 
 const THEME_KEY = 'app_theme';
@@ -37,6 +39,7 @@ export const Signup: React.FC = () => {
         return (localStorage.getItem(THEME_KEY) as 'light' | 'dark') || 'light';
     });
     const navigate = useNavigate();
+    const { t } = useLanguage();
     const logoSrc = theme === 'dark' ? '/winstantpay-logo-light.png' : '/winstantpay-logo.png';
 
     useEffect(() => {
@@ -58,7 +61,7 @@ export const Signup: React.FC = () => {
         setSuccess('');
 
         if (formData.password !== formData.confirmPassword) {
-            setError('Password and Confirm Password must match.');
+            setError(t('auth.passwordMismatch'));
             return;
         }
 
@@ -67,21 +70,22 @@ export const Signup: React.FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 700));
 
         console.info('Dummy signup payload:', formData);
-        setSuccess('Signup captured successfully (dummy flow). Backend process will be connected next.');
+        setSuccess(t('auth.signupCaptured'));
         setIsSubmitting(false);
     };
 
     return (
         <div className="signup-container">
             <div className="signup-card">
-                <button className="auth-theme-toggle" onClick={toggleTheme} type="button" aria-label="Toggle theme">
-                    {theme === 'light' ? '☀️ Light' : '🌙 Dark'}
+                <LanguageSwitcher className="auth-language-switcher" />
+                <button className="auth-theme-toggle" onClick={toggleTheme} type="button" aria-label={t('auth.toggleTheme')}>
+                    {theme === 'light' ? `☀️ ${t('common.light')}` : `🌙 ${t('common.dark')}`}
                 </button>
 
                 <header className="signup-header">
                     <img src={logoSrc} alt="WinstantPay" className="signup-brand-logo" />
-                    <h1 className="signup-title">Sign Up with Us</h1>
-                    <p className="signup-subtitle">Create your account</p>
+                    <h1 className="signup-title">{t('auth.signupTitle')}</h1>
+                    <p className="signup-subtitle">{t('auth.signupSubtitle')}</p>
                 </header>
 
                 <form className="signup-form" onSubmit={handleSubmit}>
@@ -89,7 +93,7 @@ export const Signup: React.FC = () => {
                     {success && <div className="signup-message success">{success}</div>}
 
                     <div className="signup-grid">
-                        <label htmlFor="signup-username" className="signup-label required">Username</label>
+                        <label htmlFor="signup-username" className="signup-label required">{t('auth.username')}</label>
                         <input
                             id="signup-username"
                             className="signup-input"
@@ -99,7 +103,7 @@ export const Signup: React.FC = () => {
                             required
                         />
 
-                        <label htmlFor="signup-password" className="signup-label required">Password</label>
+                        <label htmlFor="signup-password" className="signup-label required">{t('auth.password')}</label>
                         <input
                             id="signup-password"
                             className="signup-input"
@@ -109,7 +113,7 @@ export const Signup: React.FC = () => {
                             required
                         />
 
-                        <label htmlFor="signup-confirm-password" className="signup-label required">Confirm Password</label>
+                        <label htmlFor="signup-confirm-password" className="signup-label required">{t('auth.confirmPassword')}</label>
                         <input
                             id="signup-confirm-password"
                             className="signup-input"
@@ -119,7 +123,7 @@ export const Signup: React.FC = () => {
                             required
                         />
 
-                        <label htmlFor="signup-email" className="signup-label required">Email</label>
+                        <label htmlFor="signup-email" className="signup-label required">{t('auth.email')}</label>
                         <input
                             id="signup-email"
                             className="signup-input"
@@ -129,7 +133,7 @@ export const Signup: React.FC = () => {
                             required
                         />
 
-                        <label htmlFor="signup-cellphone" className="signup-label">Cellphone</label>
+                        <label htmlFor="signup-cellphone" className="signup-label">{t('auth.cellphone')}</label>
                         <input
                             id="signup-cellphone"
                             className="signup-input"
@@ -138,7 +142,7 @@ export const Signup: React.FC = () => {
                             onChange={(event) => updateField('cellphone', event.target.value)}
                         />
 
-                        <label htmlFor="signup-first-name" className="signup-label required">First Name</label>
+                        <label htmlFor="signup-first-name" className="signup-label required">{t('auth.firstName')}</label>
                         <input
                             id="signup-first-name"
                             className="signup-input"
@@ -148,7 +152,7 @@ export const Signup: React.FC = () => {
                             required
                         />
 
-                        <label htmlFor="signup-last-name" className="signup-label required">Last Name</label>
+                        <label htmlFor="signup-last-name" className="signup-label required">{t('auth.lastName')}</label>
                         <input
                             id="signup-last-name"
                             className="signup-input"
@@ -158,7 +162,7 @@ export const Signup: React.FC = () => {
                             required
                         />
 
-                        <label htmlFor="signup-referred-by" className="signup-label">Referred By</label>
+                        <label htmlFor="signup-referred-by" className="signup-label">{t('auth.referredBy')}</label>
                         <input
                             id="signup-referred-by"
                             className="signup-input"
@@ -167,7 +171,7 @@ export const Signup: React.FC = () => {
                             onChange={(event) => updateField('referredBy', event.target.value)}
                         />
 
-                        <label htmlFor="signup-notary-node" className="signup-label required">Notary Node</label>
+                        <label htmlFor="signup-notary-node" className="signup-label required">{t('auth.notaryNode')}</label>
                         <select
                             id="signup-notary-node"
                             className="signup-input"
@@ -175,22 +179,22 @@ export const Signup: React.FC = () => {
                             onChange={(event) => updateField('notaryNode', event.target.value)}
                             required
                         >
-                            <option value="WinstantGold SX - Sint Maarten">WinstantGold SX - Sint Maarten</option>
-                            <option value="WinstantGold US - United States">WinstantGold US - United States</option>
-                            <option value="WinstantGold EU - Europe">WinstantGold EU - Europe</option>
+                            <option value="WinstantGold SX - Sint Maarten">{t('auth.notary.sx')}</option>
+                            <option value="WinstantGold US - United States">{t('auth.notary.us')}</option>
+                            <option value="WinstantGold EU - Europe">{t('auth.notary.eu')}</option>
                         </select>
                     </div>
 
                     <button type="submit" className="signup-submit" disabled={isSubmitting}>
-                        {isSubmitting ? 'Submitting...' : 'Submit'}
+                        {isSubmitting ? t('auth.submitting') : t('auth.submit')}
                     </button>
                 </form>
 
                 <div className="signup-footer-links">
-                    <span>Already have an account?</span>
-                    <Link to="/login">Sign In</Link>
+                    <span>{t('auth.alreadyAccount')}</span>
+                    <Link to="/login">{t('auth.signIn')}</Link>
                     <button type="button" className="text-button" onClick={() => navigate('/login')}>
-                        Back to Login
+                        {t('auth.backToLogin')}
                     </button>
                 </div>
             </div>

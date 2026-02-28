@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.ts';
+import { useLanguage } from '../hooks/useLanguage.ts';
 import { balanceService } from '../api/balance.service.ts';
 import { formatCurrency } from '../utils/formatters.ts';
 import type { CustomerBalanceData } from '../types/balance.types.ts';
@@ -8,6 +9,7 @@ import '../styles/Dashboard.css';
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [balances, setBalances] = useState<CustomerBalanceData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,14 +24,14 @@ export const Dashboard: React.FC = () => {
         const data = await balanceService.getBalances(user.organizationId);
         setBalances(data.balances || []);
       } catch (err) {
-        setError('Failed to load balances. Please try again.');
+        setError(t('dashboard.loadError'));
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
     fetchBalances();
-  }, [user]);
+  }, [user, t]);
 
   const filtered = hideZero
     ? balances.filter((b) => b.balance !== 0 || b.balanceAvailable !== 0)
@@ -38,25 +40,25 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>Welcome, {user?.firstName}</h1>
+        <h1>{t('dashboard.welcome', { name: user?.firstName || '' })}</h1>
         <label className="hide-zero-toggle">
           <input type="checkbox" checked={hideZero} onChange={(e) => setHideZero(e.target.checked)} />
-          Hide zero balances
+          {t('dashboard.hideZero')}
         </label>
       </div>
 
-      {loading && <div className="loading-spinner"><div className="spinner" /><p>Loading balances...</p></div>}
+      {loading && <div className="loading-spinner"><div className="spinner" /><p>{t('dashboard.loadingBalances')}</p></div>}
 
       {error && (
         <div className="error-box">
           <p>{error}</p>
-          <button onClick={() => window.location.reload()}>Retry</button>
+          <button onClick={() => window.location.reload()}>{t('common.retry')}</button>
         </div>
       )}
 
       {!loading && !error && (
         <div className="balance-grid">
-          {filtered.length === 0 && <p className="no-data">No balances to display.</p>}
+          {filtered.length === 0 && <p className="no-data">{t('dashboard.noBalances')}</p>}
           {filtered.map((bal) => (
             <div key={bal.accountId} className="balance-card" onClick={() => navigate(`/statement/${bal.accountId}`)}>
               <div className="balance-card-header">
@@ -65,19 +67,19 @@ export const Dashboard: React.FC = () => {
               </div>
               <div className="balance-card-body">
                 <div className="balance-row">
-                  <span className="balance-label">Available</span>
+                  <span className="balance-label">{t('dashboard.available')}</span>
                   <span className="balance-value balance-number">{formatCurrency(bal.balanceAvailable)}</span>
                 </div>
                 <div className="balance-row">
-                  <span className="balance-label">Reserved</span>
+                  <span className="balance-label">{t('dashboard.reserved')}</span>
                   <span className="balance-value balance-number">{formatCurrency(bal.activeHoldsTotal)}</span>
                 </div>
                 <div className="balance-row total">
-                  <span className="balance-label">Total</span>
+                  <span className="balance-label">{t('dashboard.total')}</span>
                   <span className="balance-value balance-number">{formatCurrency(bal.balance)}</span>
                 </div>
               </div>
-              <div className="balance-card-footer">View Statement &rarr;</div>
+              <div className="balance-card-footer">{t('dashboard.viewStatement')}</div>
             </div>
           ))}
         </div>

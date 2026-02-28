@@ -1,0 +1,267 @@
+{
+    "common": {
+        "loading": "Loading...",
+        "back": "Back",
+        "cancel": "Cancel",
+        "custom": "Custom",
+        "fetch": "Fetch",
+        "retry": "Retry",
+        "to": "to",
+        "language": "Language",
+        "light": "Light",
+        "dark": "Dark"
+    },
+    "nav": {
+        "dashboard": "Dashboard",
+        "payNow": "Pay Now",
+        "exchange": "Exchange",
+        "help": "Help",
+        "history": "History",
+        "payments": "Payments",
+        "exchanges": "Exchanges",
+        "logout": "Log Out",
+        "toggleSidebar": "Toggle sidebar",
+        "toggleMobileMenu": "Toggle mobile menu",
+        "toggleTheme": "Toggle theme",
+        "userMenu": "User menu"
+    },
+    "auth": {
+        "toggleTheme": "Toggle theme",
+        "subtitle": "Sign in to your wallet",
+        "username": "Username",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "email": "Email",
+        "cellphone": "Cellphone",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "referredBy": "Referred By",
+        "notaryNode": "Notary Node",
+        "enterUsername": "Enter your username",
+        "enterPassword": "Enter your password",
+        "hidePassword": "Hide password",
+        "showPassword": "Show password",
+        "signIn": "Sign In",
+        "signingIn": "Signing in...",
+        "newUser": "New user?",
+        "createAccount": "Create an account",
+        "alreadyAccount": "Already have an account?",
+        "backToLogin": "Back to Login",
+        "signupTitle": "Sign Up with Us",
+        "signupSubtitle": "Create your account",
+        "submit": "Submit",
+        "submitting": "Submitting...",
+        "loginFailed": "Login failed. Please check your credentials.",
+        "passwordMismatch": "Password and Confirm Password must match.",
+        "signupCaptured": "Signup captured successfully (dummy flow). Backend process will be connected next.",
+        "notary": {
+            "sx": "WinstantGold SX - Sint Maarten",
+            "us": "WinstantGold US - United States",
+            "eu": "WinstantGold EU - Europe"
+        }
+    },
+    "dashboard": {
+        "welcome": "Welcome, {{name}}",
+        "hideZero": "Hide zero balances",
+        "loadingBalances": "Loading balances...",
+        "loadError": "Failed to load balances. Please try again.",
+        "noBalances": "No balances to display.",
+        "available": "Available",
+        "reserved": "Reserved",
+        "total": "Total",
+        "viewStatement": "View Statement →"
+    },
+    "statement": {
+        "title": "Account Statement",
+        "days": "{{days}} days",
+        "loading": "Loading statement...",
+        "loadError": "Failed to load statement.",
+        "account": "Account",
+        "opening": "Opening",
+        "closing": "Closing",
+        "noTransactions": "No transactions found for this period.",
+        "date": "Date",
+        "type": "Type",
+        "description": "Description",
+        "debit": "Debit",
+        "credit": "Credit",
+        "balance": "Balance",
+        "totalDebits": "Total Debits",
+        "totalCredits": "Total Credits",
+        "netChange": "Net Change"
+    },
+    "payment": {
+        "title": "Instant Payment",
+        "receiverPayId": "Receiver PayID",
+        "receiverPlaceholder": "Enter receiver's PayID",
+        "amount": "Amount",
+        "currency": "Currency",
+        "memoOptional": "Memo (optional)",
+        "memoPlaceholder": "Payment note",
+        "reviewPayment": "Review Payment",
+        "reviewSend": "Review & Send",
+        "sendPayment": "Send Payment",
+        "processing": "Processing...",
+        "successTitle": "Payment Sent!",
+        "reference": "Reference",
+        "sendAnother": "Send Another",
+        "viewHistory": "View History",
+        "instantReason": "Instant Payment",
+        "to": "To",
+        "failed": "Failed to send payment. Please try again."
+    },
+    "fx": {
+        "title": "FX Exchange",
+        "buyCurrencies": "Buy Currencies",
+        "sellCurrencies": "Sell Currencies",
+        "buyCurrency": "Buy Currency",
+        "sellCurrency": "Sell Currency",
+        "amount": "Amount",
+        "amountCurrency": "Amount Currency",
+        "getQuote": "Get Quote",
+        "requestingQuote": "Requesting quote...",
+        "quoteTitle": "FX Quote",
+        "expiresIn": "Expires in {{time}}",
+        "symbol": "Symbol",
+        "rate": "Rate",
+        "buy": "Buy",
+        "sell": "Sell",
+        "dealType": "Deal Type",
+        "valueDate": "Value Date",
+        "bookDeal": "Book Deal",
+        "booking": "Booking deal...",
+        "expiredTitle": "Quote Expired",
+        "expiredBody": "The quote has expired. Please request a new one.",
+        "newQuote": "Get New Quote",
+        "successTitle": "Deal Booked!",
+        "dealReference": "Deal Reference",
+        "depositReference": "Deposit Reference",
+        "bought": "Bought",
+        "sold": "Sold",
+        "newExchange": "New Exchange",
+        "viewHistory": "View History",
+        "loadCurrenciesError": "Failed to load currencies.",
+        "quoteError": "Failed to get quote. Please try again.",
+        "bookError": "Failed to book deal. Please try again.",
+        "booked": "Booked"
+    },
+    "history": {
+        "paymentsTitle": "Payment History",
+        "paymentsLoadError": "Failed to load payment history.",
+        "noPayments": "No payments found.",
+        "exchangeTitle": "Exchange History",
+        "exchangeLoadError": "Failed to load exchange history.",
+        "noDeals": "No FX deals found.",
+        "date": "Date",
+        "reference": "Reference",
+        "from": "From",
+        "to": "To",
+        "amount": "Amount",
+        "status": "Status",
+        "sell": "Sell",
+        "buy": "Buy",
+        "rate": "Rate",
+        "booked": "Booked",
+        "valueDate": "Value Date"
+    },
+    "help": {
+        "title": "Help Center",
+        "subtitle": "Quick guidance for the main wallet flows. Update this file to maintain labels and help content in one place.",
+        "searchPlaceholder": "Search help topics...",
+        "searchAria": "Search help topics",
+        "noResults": "No help topics match \"{{query}}\".",
+        "sections": {
+            "gettingStarted": {
+                "title": "Getting Started",
+                "intro": "Use these first steps when a user opens the app for the first time.",
+                "items": {
+                    "signIn": {
+                        "label": "Sign in",
+                        "description": "Use your username and password on the login page. If you are new, create an account first from the sign-up page."
+                    },
+                    "pickTheme": {
+                        "label": "Pick a theme",
+                        "description": "Use the Light/Dark switch on login or sign-up. Your theme preference is saved automatically."
+                    },
+                    "openDashboard": {
+                        "label": "Open dashboard",
+                        "description": "After sign in, you land on Dashboard where all balances are shown by currency account."
+                    }
+                }
+            },
+            "dashboard": {
+                "title": "Dashboard",
+                "items": {
+                    "hideZero": {
+                        "label": "Hide zero balances",
+                        "description": "Use the checkbox in the top-right to only show accounts with non-zero available/total values."
+                    },
+                    "viewStatement": {
+                        "label": "View statement",
+                        "description": "Click any account card to open its statement with transaction history and date filters."
+                    }
+                }
+            },
+            "payments": {
+                "title": "Pay Now",
+                "items": {
+                    "createPayment": {
+                        "label": "Create payment",
+                        "description": "Enter recipient PayID, amount, and currency, then continue to review before sending."
+                    },
+                    "reviewConfirm": {
+                        "label": "Review and confirm",
+                        "description": "Confirm details carefully. Once posted, payment status and reference appear in Payment History."
+                    }
+                }
+            },
+            "exchange": {
+                "title": "Exchange (FX)",
+                "items": {
+                    "getQuote": {
+                        "label": "Get quote",
+                        "description": "Select buy/sell currencies and amount, then request a quote."
+                    },
+                    "quoteExpiry": {
+                        "label": "Quote expiry",
+                        "description": "Quotes have a countdown timer. If it expires, request a new quote before booking."
+                    },
+                    "bookDeal": {
+                        "label": "Book deal",
+                        "description": "Book the quote to complete exchange and generate references visible in Exchange History."
+                    }
+                }
+            },
+            "history": {
+                "title": "History",
+                "items": {
+                    "paymentHistory": {
+                        "label": "Payment History",
+                        "description": "See sent payment records with date/time, reference, parties, amount, and status."
+                    },
+                    "exchangeHistory": {
+                        "label": "Exchange History",
+                        "description": "See booked FX deals, rates, conversion values, and value dates."
+                    }
+                }
+            },
+            "support": {
+                "title": "Troubleshooting",
+                "items": {
+                    "cantSignIn": {
+                        "label": "Can't sign in",
+                        "description": "Check username/password carefully and verify API availability. Try again after a few seconds."
+                    },
+                    "pageNotFound": {
+                        "label": "Page not found after deploy",
+                        "description": "Ensure staticwebapp.config.json exists in the deployed artifact for SPA route fallback."
+                    },
+                    "themeLogoWrong": {
+                        "label": "Theme/logo looks wrong",
+                        "description": "Toggle theme once and refresh. The app saves theme under local storage key app_theme."
+                    }
+                }
+            }
+        }
+    }
+}

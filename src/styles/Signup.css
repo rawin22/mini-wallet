@@ -35,6 +35,17 @@
     transition: all 0.2s ease;
 }
 
+.auth-language-switcher {
+    position: absolute;
+    top: 12px;
+    right: 128px;
+}
+
+.auth-language-switcher .language-select {
+    height: 31px;
+    font-size: 12px;
+}
+
 .auth-theme-toggle:hover {
     border-color: var(--accent-blue);
     color: var(--text-primary);

@@ -1,113 +1,110 @@
 export interface HelpItem {
-    label: string;
-    description: string;
+    labelKey: string;
+    descriptionKey: string;
 }
 
 export interface HelpSection {
     id: string;
-    title: string;
-    intro?: string;
+    titleKey: string;
+    introKey?: string;
     items: HelpItem[];
 }
-
-export const HELP_PAGE_TITLE = 'Help Center';
-export const HELP_PAGE_SUBTITLE = 'Quick guidance for the main wallet flows. Update this file to maintain labels and help content in one place.';
 
 export const HELP_SECTIONS: HelpSection[] = [
     {
         id: 'getting-started',
-        title: 'Getting Started',
-        intro: 'Use these first steps when a user opens the app for the first time.',
+        titleKey: 'help.sections.gettingStarted.title',
+        introKey: 'help.sections.gettingStarted.intro',
         items: [
             {
-                label: 'Sign in',
-                description: 'Use your username and password on the login page. If you are new, create an account first from the sign-up page.',
+                labelKey: 'help.sections.gettingStarted.items.signIn.label',
+                descriptionKey: 'help.sections.gettingStarted.items.signIn.description',
             },
             {
-                label: 'Pick a theme',
-                description: 'Use the Light/Dark switch on login or sign-up. Your theme preference is saved automatically.',
+                labelKey: 'help.sections.gettingStarted.items.pickTheme.label',
+                descriptionKey: 'help.sections.gettingStarted.items.pickTheme.description',
             },
             {
-                label: 'Open dashboard',
-                description: 'After sign in, you land on Dashboard where all balances are shown by currency account.',
+                labelKey: 'help.sections.gettingStarted.items.openDashboard.label',
+                descriptionKey: 'help.sections.gettingStarted.items.openDashboard.description',
             },
         ],
     },
     {
         id: 'dashboard',
-        title: 'Dashboard',
+        titleKey: 'help.sections.dashboard.title',
         items: [
             {
-                label: 'Hide zero balances',
-                description: 'Use the checkbox in the top-right to only show accounts with non-zero available/total values.',
+                labelKey: 'help.sections.dashboard.items.hideZero.label',
+                descriptionKey: 'help.sections.dashboard.items.hideZero.description',
             },
             {
-                label: 'View statement',
-                description: 'Click any account card to open its statement with transaction history and date filters.',
+                labelKey: 'help.sections.dashboard.items.viewStatement.label',
+                descriptionKey: 'help.sections.dashboard.items.viewStatement.description',
             },
         ],
     },
     {
         id: 'payments',
-        title: 'Pay Now',
+        titleKey: 'help.sections.payments.title',
         items: [
             {
-                label: 'Create payment',
-                description: 'Enter recipient PayID, amount, and currency, then continue to review before sending.',
+                labelKey: 'help.sections.payments.items.createPayment.label',
+                descriptionKey: 'help.sections.payments.items.createPayment.description',
             },
             {
-                label: 'Review and confirm',
-                description: 'Confirm details carefully. Once posted, payment status and reference appear in Payment History.',
+                labelKey: 'help.sections.payments.items.reviewConfirm.label',
+                descriptionKey: 'help.sections.payments.items.reviewConfirm.description',
             },
         ],
     },
     {
         id: 'exchange',
-        title: 'Exchange (FX)',
+        titleKey: 'help.sections.exchange.title',
         items: [
             {
-                label: 'Get quote',
-                description: 'Select buy/sell currencies and amount, then request a quote.',
+                labelKey: 'help.sections.exchange.items.getQuote.label',
+                descriptionKey: 'help.sections.exchange.items.getQuote.description',
             },
             {
-                label: 'Quote expiry',
-                description: 'Quotes have a countdown timer. If it expires, request a new quote before booking.',
+                labelKey: 'help.sections.exchange.items.quoteExpiry.label',
+                descriptionKey: 'help.sections.exchange.items.quoteExpiry.description',
             },
             {
-                label: 'Book deal',
-                description: 'Book the quote to complete exchange and generate references visible in Exchange History.',
+                labelKey: 'help.sections.exchange.items.bookDeal.label',
+                descriptionKey: 'help.sections.exchange.items.bookDeal.description',
             },
         ],
     },
     {
         id: 'history',
-        title: 'History',
+        titleKey: 'help.sections.history.title',
         items: [
             {
-                label: 'Payment History',
-                description: 'See sent payment records with date/time, reference, parties, amount, and status.',
+                labelKey: 'help.sections.history.items.paymentHistory.label',
+                descriptionKey: 'help.sections.history.items.paymentHistory.description',
             },
             {
-                label: 'Exchange History',
-                description: 'See booked FX deals, rates, conversion values, and value dates.',
+                labelKey: 'help.sections.history.items.exchangeHistory.label',
+                descriptionKey: 'help.sections.history.items.exchangeHistory.description',
             },
         ],
     },
     {
         id: 'support',
-        title: 'Troubleshooting',
+        titleKey: 'help.sections.support.title',
         items: [
             {
-                label: 'Can’t sign in',
-                description: 'Check username/password carefully and verify API availability. Try again after a few seconds.',
+                labelKey: 'help.sections.support.items.cantSignIn.label',
+                descriptionKey: 'help.sections.support.items.cantSignIn.description',
             },
             {
-                label: 'Page not found after deploy',
-                description: 'Ensure staticwebapp.config.json exists in the deployed artifact for SPA route fallback.',
+                labelKey: 'help.sections.support.items.pageNotFound.label',
+                descriptionKey: 'help.sections.support.items.pageNotFound.description',
             },
             {
-                label: 'Theme/logo looks wrong',
-                description: 'Toggle theme once and refresh. The app saves theme under local storage key app_theme.',
+                labelKey: 'help.sections.support.items.themeLogoWrong.label',
+                descriptionKey: 'help.sections.support.items.themeLogoWrong.description',
             },
         ],
     },

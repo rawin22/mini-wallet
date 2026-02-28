@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useLanguage } from '../../hooks/useLanguage.ts';
 
 interface MenuItem {
-  label: string;
+  id: string;
+  labelKey: string;
   icon: string;
   path: string;
   hasSubmenu?: boolean;
-  submenuItems?: { label: string; path: string }[];
+  submenuItems?: { id: string; labelKey: string; path: string }[];
 }
 
 interface LeftSidebarProps {
@@ -16,30 +18,32 @@ interface LeftSidebarProps {
 }
 
 const menuItems: MenuItem[] = [
-  { label: 'Dashboard', icon: '\u{1F4CA}', path: '/dashboard' },
-  { label: 'Pay Now', icon: '\u26A1', path: '/pay-now' },
-  { label: 'Exchange', icon: '\u{1F504}', path: '/exchange' },
-  { label: 'Help', icon: '\u2753', path: '/help' },
+  { id: 'dashboard', labelKey: 'nav.dashboard', icon: '\u{1F4CA}', path: '/dashboard' },
+  { id: 'pay-now', labelKey: 'nav.payNow', icon: '\u26A1', path: '/pay-now' },
+  { id: 'exchange', labelKey: 'nav.exchange', icon: '\u{1F504}', path: '/exchange' },
+  { id: 'help', labelKey: 'nav.help', icon: '\u2753', path: '/help' },
   {
-    label: 'History',
+    id: 'history',
+    labelKey: 'nav.history',
     icon: '\u{1F4DC}',
     path: '/history',
     hasSubmenu: true,
     submenuItems: [
-      { label: 'Payments', path: '/history/payments' },
-      { label: 'Exchanges', path: '/history/convert' },
+      { id: 'payments', labelKey: 'nav.payments', path: '/history/payments' },
+      { id: 'exchanges', labelKey: 'nav.exchanges', path: '/history/convert' },
     ],
   },
 ];
 
 export const LeftSidebar: React.FC<LeftSidebarProps> = ({ collapsed, mobileOpen, onClose }) => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const handleMenuClick = (item: MenuItem) => {
     if (item.hasSubmenu) {
-      setOpenSubmenu(openSubmenu === item.label ? null : item.label);
+      setOpenSubmenu(openSubmenu === item.id ? null : item.id);
     } else {
       navigate(item.path);
       onClose();
@@ -65,14 +69,14 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({ collapsed, mobileOpen,
         <div className="sidebar-menu-area">
           <ul className="sidebar-menu">
             {menuItems.map((item) => (
-              <li key={item.label} className={`sidebar-menu-item ${isActive(item.path) ? 'active' : ''}`}>
+              <li key={item.id} className={`sidebar-menu-item ${isActive(item.path) ? 'active' : ''}`}>
                 <button className="sidebar-link" onClick={() => handleMenuClick(item)}>
                   <span className="menu-icon">{item.icon}</span>
                   {!collapsed && (
                     <>
-                      <span className="menu-label">{item.label}</span>
+                      <span className="menu-label">{t(item.labelKey)}</span>
                       {item.hasSubmenu && (
-                        <span className={`menu-arrow ${openSubmenu === item.label ? 'open' : ''}`}>
+                        <span className={`menu-arrow ${openSubmenu === item.id ? 'open' : ''}`}>
                           &#x203A;
                         </span>
                       )}
@@ -80,15 +84,15 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({ collapsed, mobileOpen,
                   )}
                 </button>
 
-                {item.hasSubmenu && openSubmenu === item.label && !collapsed && (
+                {item.hasSubmenu && openSubmenu === item.id && !collapsed && (
                   <ul className="sidebar-submenu">
                     {item.submenuItems?.map((sub) => (
-                      <li key={sub.label}>
+                      <li key={sub.id}>
                         <button
                           className={`submenu-link ${isActive(sub.path) ? 'active' : ''}`}
                           onClick={() => handleSubmenuClick(sub.path)}
                         >
-                          {sub.label}
+                          {t(sub.labelKey)}
                         </button>
                       </li>
                     ))}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth.ts';
+import { useLanguage } from '../../hooks/useLanguage.ts';
+import { LanguageSwitcher } from '../LanguageSwitcher.tsx';
 
 interface TopNavBarProps {
   onToggleSidebar: () => void;
@@ -11,6 +13,7 @@ const THEME_KEY = 'app_theme';
 
 export const TopNavBar: React.FC<TopNavBarProps> = ({ onToggleSidebar, onToggleMobileSidebar }) => {
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -36,12 +39,12 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ onToggleSidebar, onToggleM
   return (
     <nav className="navbar-header">
       <div className="navbar-left">
-        <button className="sidebar-toggle desktop-only" onClick={onToggleSidebar} aria-label="Toggle sidebar">
+        <button className="sidebar-toggle desktop-only" onClick={onToggleSidebar} aria-label={t('nav.toggleSidebar')}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </button>
-        <button className="sidebar-mobile-toggle mobile-only" onClick={onToggleMobileSidebar} aria-label="Toggle mobile menu">
+        <button className="sidebar-mobile-toggle mobile-only" onClick={onToggleMobileSidebar} aria-label={t('nav.toggleMobileMenu')}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
@@ -54,7 +57,8 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ onToggleSidebar, onToggleM
       </div>
 
       <div className="navbar-right">
-        <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+        <LanguageSwitcher />
+        <button className="theme-toggle" onClick={toggleTheme} aria-label={t('nav.toggleTheme')}>
           {theme === 'light' ? (
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -68,7 +72,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ onToggleSidebar, onToggleM
         </button>
 
         <div className="user-menu-container">
-          <button className="user-profile-btn" onClick={() => setShowUserMenu(!showUserMenu)} aria-label="User menu">
+          <button className="user-profile-btn" onClick={() => setShowUserMenu(!showUserMenu)} aria-label={t('nav.userMenu')}>
             <div className="user-avatar">
               {user?.firstName?.[0]}{user?.lastName?.[0]}
             </div>
@@ -87,7 +91,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ onToggleSidebar, onToggleM
               </div>
               <div className="user-dropdown-divider" />
               <ul className="user-dropdown-menu">
-                <li><a href="#" onClick={handleLogout} className="logout-link">Log Out</a></li>
+                <li><a href="#" onClick={handleLogout} className="logout-link">{t('nav.logout')}</a></li>
               </ul>
             </div>
           )}

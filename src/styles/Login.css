@@ -34,6 +34,17 @@
   cursor: pointer;
 }
 
+.auth-language-switcher {
+  position: absolute;
+  top: 12px;
+  right: 128px;
+}
+
+.auth-language-switcher .language-select {
+  height: 31px;
+  font-size: 12px;
+}
+
 .login-header {
   text-align: center;
   margin-bottom: 32px;
