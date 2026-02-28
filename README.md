@@ -3,6 +3,23 @@
 Python CLI scripts and API reference for the BizCurrency Global Payments wallet.
 Use this as a blueprint for implementing the web application.
 
+## Web App (Root)
+
+The React + Vite web application lives at repository root.
+
+```bash
+# Install frontend dependencies
+npm install
+
+# Run local dev server
+npm run dev
+
+# Create production build
+npm run build
+```
+
+> The `scripts/` folder remains dedicated to Python CLI/API utilities.
+
 ## Quick Start
 
 ```bash
