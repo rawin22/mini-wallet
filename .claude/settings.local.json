@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/home/ralf/src/private/winner/mini-wallet/.venv/bin/python -m ruff check /home/ralf/src/private/winner/mini-wallet/scripts/)",
+      "Bash(ruff check /home/ralf/src/private/winner/mini-wallet/scripts/)"
+    ]
+  }
+}

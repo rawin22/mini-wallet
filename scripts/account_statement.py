@@ -138,7 +138,7 @@ def display_statement(data: dict, start_date: datetime, end_date: datetime) -> N
         print(f"{date_str:<18}{txn_type:<16}{description:<30}{debit_str:>12}{credit_str:>12}{balance:>12,.2f}")
 
     currency = account_info.get("accountCurrencyCode", "")
-    print(f"\nSummary:")
+    print("\nSummary:")
     print(f"  Total Debits:  {total_debit:,.2f} {currency}")
     print(f"  Total Credits: {total_credit:,.2f} {currency}")
     print(f"  Net Change:    {total_credit - total_debit:,.2f} {currency}")
@@ -160,7 +160,7 @@ def main() -> None:
 
     account_id = selected_account.get("accountId")
     currency = selected_account.get("currencyCode")
-    print(f"\n=== FETCHING ACCOUNT STATEMENT ===")
+    print("\n=== FETCHING ACCOUNT STATEMENT ===")
     print(f"  Currency: {currency}")
     print(f"  Period: {start_date:%Y-%m-%d} to {end_date:%Y-%m-%d}\n")
 

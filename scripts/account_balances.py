@@ -10,7 +10,7 @@ import sys
 
 import requests
 
-from api_client import authenticate, auth_headers, get_balances, BASE_URL
+from api_client import authenticate, get_balances
 
 
 def main() -> None:
