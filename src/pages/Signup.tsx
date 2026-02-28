@@ -32,9 +32,10 @@ export const Signup: React.FC = () => {
     const [success, setSuccess] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
-    const logoSrc = (localStorage.getItem('app_theme') || 'dark') === 'dark'
-        ? '/winstantpay-logo-light.png'
-        : '/winstantpay-logo.png';
+    const storedTheme = localStorage.getItem('app_theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDarkTheme = storedTheme ? storedTheme === 'dark' : prefersDark;
+    const logoSrc = isDarkTheme ? '/winstantpay-logo-light.png' : '/winstantpay-logo.png';
 
     const updateField = (field: keyof SignupFormState, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));

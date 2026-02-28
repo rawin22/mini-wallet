@@ -11,9 +11,10 @@ export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const logoSrc = (localStorage.getItem('app_theme') || 'dark') === 'dark'
-    ? '/winstantpay-logo-light.png'
-    : '/winstantpay-logo.png';
+  const storedTheme = localStorage.getItem('app_theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDarkTheme = storedTheme ? storedTheme === 'dark' : prefersDark;
+  const logoSrc = isDarkTheme ? '/winstantpay-logo-light.png' : '/winstantpay-logo.png';
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
