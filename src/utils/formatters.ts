@@ -1,5 +1,21 @@
+const LANGUAGE_KEY = 'app_language';
+
+const localeByLanguage: Record<string, string> = {
+  en: 'en-US',
+  fr: 'fr-FR',
+};
+
+const getActiveLocale = (): string => {
+  if (typeof window === 'undefined') {
+    return localeByLanguage.en;
+  }
+
+  const selectedLanguage = window.localStorage.getItem(LANGUAGE_KEY) || 'en';
+  return localeByLanguage[selectedLanguage] || localeByLanguage.en;
+};
+
 export const formatCurrency = (amount: number, decimals = 2): string => {
-  return amount.toLocaleString('en-US', {
+  return amount.toLocaleString(getActiveLocale(), {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
@@ -7,7 +23,7 @@ export const formatCurrency = (amount: number, decimals = 2): string => {
 
 export const formatDate = (dateString: string): string => {
   try {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString(getActiveLocale(), {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -19,7 +35,7 @@ export const formatDate = (dateString: string): string => {
 
 export const formatDateTime = (dateString: string): string => {
   try {
-    return new Date(dateString).toLocaleString('en-US', {
+    return new Date(dateString).toLocaleString(getActiveLocale(), {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

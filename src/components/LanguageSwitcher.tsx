@@ -19,7 +19,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className })
             >
                 {languages.map((item) => (
                     <option key={item.code} value={item.code}>
-                        {item.flag} {item.nativeLabel}
+                        {item.code.toUpperCase()}
                     </option>
                 ))}
             </select>

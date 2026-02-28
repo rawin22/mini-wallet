@@ -58,6 +58,9 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ onToggleSidebar, onToggleM
 
       <div className="navbar-right">
         <LanguageSwitcher />
+        <button className="help-toggle" onClick={() => navigate('/help')} aria-label={t('nav.help')}>
+          <span className="help-toggle-icon">?</span>
+        </button>
         <button className="theme-toggle" onClick={toggleTheme} aria-label={t('nav.toggleTheme')}>
           {theme === 'light' ? (
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
