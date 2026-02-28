@@ -13,6 +13,7 @@ const daysAgo = (days: number): string => {
 };
 
 const today = (): string => new Date().toISOString().split('T')[0];
+const allHistoryStart = (): string => '1970-01-01';
 
 export const Statement: React.FC = () => {
   const { t } = useLanguage();
@@ -30,6 +31,7 @@ export const Statement: React.FC = () => {
     if (value === '7') setStartDate(daysAgo(7));
     else if (value === '30') setStartDate(daysAgo(30));
     else if (value === '90') setStartDate(daysAgo(90));
+    else if (value === 'all') setStartDate(allHistoryStart());
   };
 
   const fetchStatement = useCallback(async () => {
@@ -66,6 +68,8 @@ export const Statement: React.FC = () => {
               {t('statement.days', { days: d })}
             </button>
           ))}
+          <button className={`preset-btn ${preset === 'all' ? 'active' : ''}`}
+            onClick={() => handlePreset('all')}>{t('statement.all')}</button>
           <button className={`preset-btn ${preset === 'custom' ? 'active' : ''}`}
             onClick={() => setPreset('custom')}>{t('common.custom')}</button>
         </div>

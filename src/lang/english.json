@@ -74,6 +74,7 @@
     "statement": {
         "title": "Account Statement",
         "days": "{{days}} days",
+        "all": "All",
         "loading": "Loading statement...",
         "loadError": "Failed to load statement.",
         "account": "Account",

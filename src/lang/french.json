@@ -74,6 +74,7 @@
     "statement": {
         "title": "Relevé de compte",
         "days": "{{days}} jours",
+        "all": "Tout",
         "loading": "Chargement du relevé...",
         "loadError": "Impossible de charger le relevé.",
         "account": "Compte",
