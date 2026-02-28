@@ -46,7 +46,11 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ onToggleSidebar, onToggleM
             <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </button>
-        <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)' }}>Mini-Wallet</span>
+        <img
+          src={theme === 'dark' ? '/winstantpay-logo-light.png' : '/winstantpay-logo.png'}
+          alt="WinstantPay"
+          className="navbar-brand-logo"
+        />
       </div>
 
       <div className="navbar-right">

@@ -11,6 +11,9 @@ export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const logoSrc = (localStorage.getItem('app_theme') || 'dark') === 'dark'
+    ? '/winstantpay-logo-light.png'
+    : '/winstantpay-logo.png';
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,7 +34,7 @@ export const Login: React.FC = () => {
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          <h1 className="login-title">Mini-Wallet</h1>
+          <img src={logoSrc} alt="WinstantPay" className="login-brand-logo" />
           <p className="login-subtitle">Sign in to your wallet</p>
         </div>
 
