@@ -10,6 +10,7 @@ import { InstantPayment } from './pages/InstantPayment.tsx';
 import { FxDeal } from './pages/FxDeal.tsx';
 import { PaymentHistory } from './pages/PaymentHistory.tsx';
 import { ConvertHistory } from './pages/ConvertHistory.tsx';
+import { Help } from './pages/Help.tsx';
 
 export const App = () => (
   <BrowserRouter>
@@ -21,6 +22,7 @@ export const App = () => (
         <Route path="/statement/:accountId" element={<ProtectedRoute><Layout><Statement /></Layout></ProtectedRoute>} />
         <Route path="/pay-now" element={<ProtectedRoute><Layout><InstantPayment /></Layout></ProtectedRoute>} />
         <Route path="/exchange" element={<ProtectedRoute><Layout><FxDeal /></Layout></ProtectedRoute>} />
+        <Route path="/help" element={<ProtectedRoute><Layout><Help /></Layout></ProtectedRoute>} />
         <Route path="/history/payments" element={<ProtectedRoute><Layout><PaymentHistory /></Layout></ProtectedRoute>} />
         <Route path="/history/convert" element={<ProtectedRoute><Layout><ConvertHistory /></Layout></ProtectedRoute>} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />

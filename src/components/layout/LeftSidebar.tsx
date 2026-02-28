@@ -19,6 +19,7 @@ const menuItems: MenuItem[] = [
   { label: 'Dashboard', icon: '\u{1F4CA}', path: '/dashboard' },
   { label: 'Pay Now', icon: '\u26A1', path: '/pay-now' },
   { label: 'Exchange', icon: '\u{1F504}', path: '/exchange' },
+  { label: 'Help', icon: '\u2753', path: '/help' },
   {
     label: 'History',
     icon: '\u{1F4DC}',
