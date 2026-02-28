@@ -1,0 +1,98 @@
+{
+  "depositInstructions": {
+    "bankName": "WinPay Settlement Bank",
+    "accountName": "WinPay Pte Ltd Client Account",
+    "accountNumber": "123-456-789",
+    "iban": "SG12WPAY0001234567890",
+    "swiftBic": "WPAYGSGX",
+    "bankAddress": "1 Raffles Place, Singapore 048616",
+    "reference": "Use your WPAY_ID as payment reference",
+    "important": [
+      "Always include your WPAY_ID in the payment reference",
+      "Funds typically credit within 1-3 business days",
+      "Minimum deposit: 100 USD equivalent",
+      "Contact support if funds not credited within 5 days"
+    ]
+  },
+  "currencies": [
+    {
+      "code": "USD",
+      "name": "US Dollar",
+      "bankName": "Citibank Singapore",
+      "accountNumber": "USD-001-234567",
+      "accountName": "WinPay Pte Ltd - USD Client Account",
+      "swiftBic": "CITISGSG",
+      "iban": null,
+      "routingNumber": "021000089",
+      "intermediaryBank": null
+    },
+    {
+      "code": "EUR",
+      "name": "Euro",
+      "bankName": "Deutsche Bank Frankfurt",
+      "accountNumber": "EUR-001-234567",
+      "accountName": "WinPay Pte Ltd - EUR Client Account",
+      "swiftBic": "DEUTDEFF",
+      "iban": "DE89370400440532013000",
+      "routingNumber": null,
+      "intermediaryBank": null
+    },
+    {
+      "code": "GBP",
+      "name": "British Pound",
+      "bankName": "Barclays Bank UK",
+      "accountNumber": "GBP-001-234567",
+      "accountName": "WinPay Pte Ltd - GBP Client Account",
+      "swiftBic": "BABORSBXXX",
+      "iban": "GB29NWBK60161331926819",
+      "routingNumber": null,
+      "sortCode": "60-16-13",
+      "intermediaryBank": null
+    },
+    {
+      "code": "SGD",
+      "name": "Singapore Dollar",
+      "bankName": "DBS Bank Singapore",
+      "accountNumber": "SGD-001-234567",
+      "accountName": "WinPay Pte Ltd - SGD Client Account",
+      "swiftBic": "DBSSSGSG",
+      "iban": null,
+      "routingNumber": null,
+      "intermediaryBank": null
+    },
+    {
+      "code": "THB",
+      "name": "Thai Baht",
+      "bankName": "Bangkok Bank",
+      "accountNumber": "THB-001-234567",
+      "accountName": "WinPay Pte Ltd - THB Client Account",
+      "swiftBic": "BKKBTHBK",
+      "iban": null,
+      "routingNumber": null,
+      "intermediaryBank": null
+    },
+    {
+      "code": "HKD",
+      "name": "Hong Kong Dollar",
+      "bankName": "HSBC Hong Kong",
+      "accountNumber": "HKD-001-234567",
+      "accountName": "WinPay Pte Ltd - HKD Client Account",
+      "swiftBic": "HSBCHKHHHKH",
+      "iban": null,
+      "routingNumber": null,
+      "intermediaryBank": null
+    }
+  ],
+  "linkedAccountsPlaceholder": {
+    "enabled": true,
+    "message": "You can link your bank accounts for faster withdrawals. This feature is coming soon.",
+    "fields": [
+      { "name": "bankName", "label": "Bank Name", "required": true },
+      { "name": "accountNumber", "label": "Account Number", "required": true },
+      { "name": "accountName", "label": "Account Holder Name", "required": true },
+      { "name": "swiftBic", "label": "SWIFT/BIC Code", "required": false },
+      { "name": "iban", "label": "IBAN", "required": false },
+      { "name": "country", "label": "Bank Country", "required": true }
+    ]
+  }
+}

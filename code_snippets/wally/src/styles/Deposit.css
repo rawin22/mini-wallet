@@ -1,0 +1,474 @@
+/* Deposit (Cash-In) Page Styles */
+
+.deposit-page {
+  padding: var(--space-lg);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.deposit-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.deposit-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.deposit-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Tab Navigation */
+.deposit-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xs);
+  border: 1px solid var(--border-subtle);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: var(--space-md);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  background: var(--gradient-blue);
+  color: white;
+}
+
+/* Deposit Card */
+.deposit-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+}
+
+.deposit-card h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-lg) 0;
+  text-align: center;
+}
+
+/* QR Code Section */
+.qr-card {
+  text-align: center;
+}
+
+.qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.qr-container {
+  background: var(--bg-primary);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--border-subtle);
+  display: inline-block;
+}
+
+.qr-container svg {
+  display: block;
+}
+
+.wpay-id-section {
+  text-align: center;
+}
+
+.wpay-id-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.wpay-id-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  background: var(--bg-hover);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.wpay-id {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  letter-spacing: 1px;
+}
+
+.btn-copy-small {
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--accent-blue);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-copy-small:hover {
+  opacity: 0.9;
+}
+
+.wpay-name {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin: var(--space-sm) 0 0 0;
+  font-weight: 500;
+}
+
+/* Deposit Instructions */
+.deposit-instructions {
+  background: var(--bg-hover);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  text-align: left;
+}
+
+.deposit-instructions h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.deposit-instructions ol {
+  margin: 0;
+  padding-left: var(--space-lg);
+  color: var(--text-primary);
+}
+
+.deposit-instructions li {
+  padding: var(--space-xs) 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Deposit Notice */
+.deposit-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.deposit-notice .notice-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--accent-green);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.deposit-notice p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Location Detection (reuse from Withdraw) */
+.location-detecting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-xl);
+  gap: var(--space-md);
+}
+
+.location-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--border-subtle);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.location-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: rgba(239, 83, 80, 0.1);
+  border: 1px solid rgba(239, 83, 80, 0.3);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+}
+
+.error-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--accent-red);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.location-error p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+/* Country Selector */
+.country-selector {
+  margin-bottom: var(--space-lg);
+}
+
+.country-selector label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.country-select {
+  width: 100%;
+  padding: var(--space-md);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.country-select:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+.btn-detect-location {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--bg-hover);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: var(--space-lg);
+}
+
+.btn-detect-location:hover {
+  background: var(--bg-hover-strong);
+  border-style: solid;
+}
+
+.btn-detect-location:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.location-icon {
+  font-size: 1.2rem;
+}
+
+/* Cash Point Selection */
+.selected-country {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: var(--space-lg);
+}
+
+.selected-country strong {
+  color: var(--text-primary);
+}
+
+.cashpoint-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.cashpoint-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.cashpoint-item:hover {
+  background: var(--bg-hover-strong);
+  border-color: var(--accent-green);
+}
+
+.cashpoint-info {
+  flex: 1;
+}
+
+.cashpoint-info h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.cashpoint-address {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.cashpoint-hours {
+  font-size: 0.75rem;
+  color: var(--accent-green);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.cashpoint-currencies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.currency-badge {
+  padding: 2px 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.currency-badge.more {
+  background: var(--accent-green);
+  color: white;
+  border: none;
+}
+
+.cashpoint-distance {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  min-width: 60px;
+  text-align: right;
+}
+
+.cashpoint-phone {
+  font-size: 1.25rem;
+  text-decoration: none;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease;
+}
+
+.cashpoint-phone:hover {
+  background: var(--bg-hover-strong);
+}
+
+.no-cashpoints {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .deposit-page {
+    padding: var(--space-md);
+  }
+
+  .deposit-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .deposit-tabs {
+    flex-direction: column;
+  }
+
+  .tab-btn {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .deposit-card {
+    padding: var(--space-lg);
+  }
+
+  .qr-container {
+    padding: var(--space-md);
+  }
+
+  .qr-container svg {
+    width: 160px !important;
+    height: 160px !important;
+  }
+
+  .wpay-id {
+    font-size: 1rem;
+  }
+
+  .wpay-id-box {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+}

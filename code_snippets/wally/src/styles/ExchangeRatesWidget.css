@@ -1,0 +1,420 @@
+/* ========================================
+   EXCHANGE RATES WIDGET - PREMIUM STYLING
+   ======================================== */
+
+.exchange-rates-widget {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.exchange-rates-widget::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(27, 110, 194, 0.08) 0%,
+    transparent 70%
+  );
+  animation: rotate 20s linear infinite;
+  pointer-events: none;
+}
+
+.exchange-rates-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-accent);
+}
+
+/* ========================================
+   WIDGET HEADER
+   ======================================== */
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.widget-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ========================================
+   CONVERSIONS GRID
+   ======================================== */
+
+.conversions-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .conversions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .conversions-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ========================================
+   CONVERSION CARD
+   ======================================== */
+
+.conversion-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.conversion-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.conversion-card:hover::before {
+  transform: scaleX(1);
+}
+
+.conversion-card:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ========================================
+   CARD HEADER
+   ======================================== */
+
+.conversion-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.flag-icon-large {
+  width: 48px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.conversion-card:hover .flag-icon-large {
+  transform: scale(1.05);
+}
+
+.currency-info {
+  flex: 1;
+}
+
+.currency-code {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.currency-name {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ========================================
+   CONVERSION RATES
+   ======================================== */
+
+.conversion-rates {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.conversion-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.conversion-row:hover {
+  background: var(--bg-hover-strong);
+}
+
+.conversion-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.flag-icon-small {
+  width: 20px;
+  height: 15px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.gold-icon {
+  font-size: 18px;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+}
+
+.conversion-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========================================
+   GOLD ROW STYLING
+   ======================================== */
+
+.gold-row {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.08) 0%,
+    rgba(255, 193, 7, 0.05) 100%
+  );
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.gold-row:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.12) 0%,
+    rgba(255, 193, 7, 0.08) 100%
+  );
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.gold-value {
+  color: #d4a017;
+  font-size: 15px;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+[data-theme='dark'] .gold-value {
+  color: #ffd700;
+}
+
+.per-oz {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+/* ========================================
+   CARD FOOTER
+   ======================================== */
+
+.card-footer {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.base-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ========================================
+   WIDGET FOOTER
+   ======================================== */
+
+.widget-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.data-source {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.data-source a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.data-source a:hover {
+  color: var(--accent-teal);
+  text-decoration: underline;
+}
+
+.refresh-info {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ========================================
+   LOADING & ERROR STATES
+   ======================================== */
+
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl);
+  gap: var(--space-md);
+  position: relative;
+  z-index: 1;
+}
+
+.spinner-small {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-subtle);
+  border-top-color: var(--accent-teal);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-state p,
+.error-state .error-text,
+.empty-state p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.error-text {
+  color: var(--accent-red);
+  font-weight: 500;
+}
+
+.retry-button {
+  padding: 8px 16px;
+  background: var(--gradient-blue);
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(27, 110, 194, 0.3);
+}
+
+.retry-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-blue);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  .exchange-rates-widget {
+    padding: var(--space-lg);
+  }
+
+  .widget-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .widget-title {
+    font-size: 18px;
+  }
+
+  .conversion-card {
+    padding: var(--space-md);
+  }
+
+  .currency-code {
+    font-size: 18px;
+  }
+
+  .conversion-value {
+    font-size: 14px;
+  }
+
+  .widget-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,437 @@
+/* DepositProof Page Styles */
+
+.deposit-proof-page {
+  padding: var(--space-lg);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.deposit-proof-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.deposit-proof-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.deposit-proof-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Card Styles */
+.deposit-proof-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-lg);
+}
+
+.deposit-proof-card h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-lg) 0;
+}
+
+/* Upload Zone */
+.upload-zone {
+  border: 2px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--bg-hover);
+}
+
+.upload-zone:hover {
+  border-color: var(--accent-blue);
+  background: rgba(27, 110, 194, 0.05);
+}
+
+.upload-zone.drag-over {
+  border-color: var(--accent-blue);
+  background: rgba(27, 110, 194, 0.1);
+}
+
+.upload-zone.has-file {
+  border-style: solid;
+  border-color: var(--accent-green);
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+.upload-zone h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.upload-zone p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.upload-zone .file-types {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: var(--space-md);
+}
+
+.upload-input {
+  display: none;
+}
+
+/* Selected File Preview */
+.selected-file {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--bg-hover);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-lg);
+}
+
+.file-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--accent-blue);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-info .file-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-info .file-size {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.btn-remove-file {
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(239, 83, 80, 0.1);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--accent-red);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-remove-file:hover {
+  background: rgba(239, 83, 80, 0.2);
+}
+
+/* Description Input */
+.description-field {
+  margin-top: var(--space-lg);
+}
+
+.description-field label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.description-field textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: var(--space-md);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+.description-field textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+.description-field textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Submit Button */
+.submit-section {
+  margin-top: var(--space-xl);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--gradient-blue);
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 110, 194, 0.3);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Upload Progress */
+.upload-progress {
+  margin-top: var(--space-lg);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-sm);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-blue);
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Success State */
+.upload-success {
+  text-align: center;
+  padding: var(--space-xl);
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--accent-green);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto var(--space-lg) auto;
+}
+
+.upload-success h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.upload-success p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-lg) 0;
+}
+
+.btn-upload-another {
+  padding: var(--space-md) var(--space-xl);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-upload-another:hover {
+  background: var(--bg-hover-strong);
+}
+
+/* Recent Uploads Section */
+.recent-uploads {
+  margin-top: var(--space-xl);
+}
+
+.recent-uploads h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.upload-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.upload-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-hover);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.upload-item .file-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+}
+
+.upload-item .upload-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.upload-item .upload-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-item .upload-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.upload-status {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.upload-status.pending {
+  background: rgba(255, 167, 38, 0.1);
+  color: var(--accent-yellow);
+}
+
+.upload-status.verified {
+  background: rgba(76, 175, 80, 0.1);
+  color: var(--accent-green);
+}
+
+.upload-status.rejected {
+  background: rgba(239, 83, 80, 0.1);
+  color: var(--accent-red);
+}
+
+/* Info Notice */
+.info-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: rgba(27, 110, 194, 0.1);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-lg);
+}
+
+.info-notice .notice-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--accent-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.info-notice p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Error Message */
+.error-message {
+  color: var(--accent-red);
+  font-size: 0.875rem;
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(239, 83, 80, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .deposit-proof-page {
+    padding: var(--space-md);
+  }
+
+  .deposit-proof-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .deposit-proof-card {
+    padding: var(--space-lg);
+  }
+
+  .upload-zone {
+    padding: var(--space-xl);
+  }
+
+  .selected-file {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .file-info .file-name {
+    white-space: normal;
+  }
+}
