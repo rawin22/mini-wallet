@@ -3,6 +3,7 @@ import { AuthProvider } from './contexts/AuthContext.tsx';
 import { ProtectedRoute } from './components/ProtectedRoute.tsx';
 import { Layout } from './components/layout/Layout.tsx';
 import { Login } from './pages/Login.tsx';
+import { Signup } from './pages/Signup.tsx';
 import { Dashboard } from './pages/Dashboard.tsx';
 import { Statement } from './pages/Statement.tsx';
 import { InstantPayment } from './pages/InstantPayment.tsx';
@@ -15,6 +16,7 @@ export const App = () => (
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
         <Route path="/statement/:accountId" element={<ProtectedRoute><Layout><Statement /></Layout></ProtectedRoute>} />
         <Route path="/pay-now" element={<ProtectedRoute><Layout><InstantPayment /></Layout></ProtectedRoute>} />

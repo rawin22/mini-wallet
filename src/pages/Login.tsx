@@ -1,5 +1,5 @@
 import React, { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.ts';
 import '../styles/Login.css';
 
@@ -61,6 +61,10 @@ export const Login: React.FC = () => {
           <button type="submit" className="login-button" disabled={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
+
+          <p className="login-link-row">
+            New user? <Link to="/signup">Create an account</Link>
+          </p>
         </form>
       </div>
     </div>

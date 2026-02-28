@@ -152,6 +152,23 @@
   transform: none;
 }
 
+.login-link-row {
+  margin: 2px 0 0;
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.92rem;
+}
+
+.login-link-row a {
+  color: #1b6ec2;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-link-row a:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 480px) {
   .login-box {
     padding: 32px 24px;
