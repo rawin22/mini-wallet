@@ -1,0 +1,6 @@
+.venv/
+*.pyc
+.opencode/
+.envp3-virothrachs/
+uv.lock
+.env

@@ -1,0 +1,4 @@
+[MESSAGES CONTROL]
+disable=invalid-name, missing-docstring, logging-fstring-interpolation, broad-except
+[FORMAT]
+max-line-length=172
