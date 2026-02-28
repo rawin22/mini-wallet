@@ -6,7 +6,7 @@ import { formatCurrency, todayDateString } from '../utils/formatters.ts';
 import type { CustomerBalanceData } from '../types/balance.types.ts';
 import '../styles/InstantPayment.css';
 
-type Step = 'form' | 'review' | 'processing' | 'confirm' | 'success';
+type Step = 'form' | 'review' | 'processing' | 'success';
 
 export const InstantPayment: React.FC = () => {
   const { user } = useAuth();
@@ -20,10 +20,8 @@ export const InstantPayment: React.FC = () => {
   const [currency, setCurrency] = useState('USD');
   const [memo, setMemo] = useState('');
 
-  // Draft from API
-  const [draftPaymentId, setDraftPaymentId] = useState('');
-  const [draftReference, setDraftReference] = useState('');
-  const [draftTimestamp, setDraftTimestamp] = useState('');
+  // Result from API
+  const [paymentReference, setPaymentReference] = useState('');
 
   useEffect(() => {
     if (!user) return;
@@ -34,12 +32,13 @@ export const InstantPayment: React.FC = () => {
     }).catch(console.error);
   }, [user]);
 
-  const handleCreatePayment = async () => {
+  const handleSendPayment = async () => {
     if (!user) return;
     setStep('processing');
     setError(null);
     try {
-      const result = await instantPaymentService.createPayment({
+      // Step 1: Create draft
+      const createResult = await instantPaymentService.createPayment({
         fromCustomer: user.userName,
         toCustomer,
         paymentTypeId: 1,
@@ -51,41 +50,30 @@ export const InstantPayment: React.FC = () => {
         memo,
       });
 
-      if (result.problems) {
-        setError(String(result.problems));
-        setStep('form');
+      if (createResult.problems) {
+        setError(String(createResult.problems));
+        setStep('review');
         return;
       }
 
-      setDraftPaymentId(result.payment.paymentId);
-      setDraftReference(result.payment.paymentReference);
-      setDraftTimestamp(result.payment.timestamp);
-      setStep('confirm');
-    } catch (err) {
-      setError('Failed to create payment. Please try again.');
-      setStep('form');
-      console.error(err);
-    }
-  };
+      setPaymentReference(createResult.payment.paymentReference);
 
-  const handleConfirmPayment = async () => {
-    setStep('processing');
-    setError(null);
-    try {
-      const result = await instantPaymentService.confirmPayment({
-        instantPaymentId: draftPaymentId,
-        timestamp: draftTimestamp,
+      // Step 2: Confirm immediately
+      const confirmResult = await instantPaymentService.confirmPayment({
+        instantPaymentId: createResult.payment.paymentId,
+        timestamp: createResult.payment.timestamp,
       });
 
-      if (result.problems) {
-        setError(String(result.problems));
-        setStep('confirm');
+      if (confirmResult.problems) {
+        setError(String(confirmResult.problems));
+        setStep('review');
         return;
       }
+
       setStep('success');
     } catch (err) {
-      setError('Failed to confirm payment. Please try again.');
-      setStep('confirm');
+      setError('Failed to send payment. Please try again.');
+      setStep('review');
       console.error(err);
     }
   };
@@ -142,7 +130,7 @@ export const InstantPayment: React.FC = () => {
 
       {step === 'review' && (
         <div className="payment-card">
-          <h2>Review Payment</h2>
+          <h2>Review &amp; Send</h2>
           <div className="review-details">
             <div className="review-row"><span>To:</span><span>{toCustomer}</span></div>
             <div className="review-row"><span>Amount:</span><span>{formatCurrency(parsedAmount)} {currency}</span></div>
@@ -150,7 +138,7 @@ export const InstantPayment: React.FC = () => {
           </div>
           <div className="button-group">
             <button className="secondary-btn" onClick={() => setStep('form')}>Back</button>
-            <button className="primary-btn" onClick={handleCreatePayment}>Create Payment</button>
+            <button className="primary-btn confirm-btn" onClick={handleSendPayment}>Send Payment</button>
           </div>
         </div>
       )}
@@ -162,28 +150,12 @@ export const InstantPayment: React.FC = () => {
         </div>
       )}
 
-      {step === 'confirm' && (
-        <div className="payment-card">
-          <h2>Confirm Payment</h2>
-          <p className="confirm-note">Payment draft created. Please confirm to finalize.</p>
-          <div className="review-details">
-            <div className="review-row"><span>Reference:</span><span>{draftReference}</span></div>
-            <div className="review-row"><span>To:</span><span>{toCustomer}</span></div>
-            <div className="review-row"><span>Amount:</span><span>{formatCurrency(parsedAmount)} {currency}</span></div>
-          </div>
-          <div className="button-group">
-            <button className="secondary-btn" onClick={resetForm}>Cancel</button>
-            <button className="primary-btn confirm-btn" onClick={handleConfirmPayment}>Confirm &amp; Send</button>
-          </div>
-        </div>
-      )}
-
       {step === 'success' && (
         <div className="payment-card success">
           <div className="success-icon">&#x2714;</div>
           <h2>Payment Sent!</h2>
           <div className="review-details">
-            <div className="review-row"><span>Reference:</span><span>{draftReference}</span></div>
+            <div className="review-row"><span>Reference:</span><span>{paymentReference}</span></div>
             <div className="review-row"><span>To:</span><span>{toCustomer}</span></div>
             <div className="review-row"><span>Amount:</span><span>{formatCurrency(parsedAmount)} {currency}</span></div>
           </div>

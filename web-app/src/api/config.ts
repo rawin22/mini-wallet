@@ -20,7 +20,7 @@ export const API_CONFIG = {
       QUOTE: '/api/v1/FXDealQuote',
       CURRENCY_LIST_BUY: '/api/v1/FXCurrencyList/Buy',
       CURRENCY_LIST_SELL: '/api/v1/FXCurrencyList/Sell',
-      DEAL_SEARCH: '/api/v1/FXDealQuote/Search',
+      DEAL_SEARCH: '/api/v1/FXDeal/Search',
     },
     CURRENCY: {
       PAYMENT_LIST: '/api/v1/PaymentCurrencyList',

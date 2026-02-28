@@ -57,3 +57,29 @@ export interface FxBookResponse {
   };
   problems: null | string;
 }
+
+export interface FxDealSearchRecord {
+  fxDealId: string;
+  fxDealReference: string;
+  fxDealTypeName: string;
+  bookedForCustomerName: string;
+  bookedTime: string;
+  dealDate: string;
+  buyAmount: number;
+  buyCurrencyCode: string;
+  buyAmountTextWithCurrencyCode: string;
+  sellAmount: number;
+  sellCurrencyCode: string;
+  sellAmountTextWithCurrencyCode: string;
+  bookedRate: number;
+  bookedRateTextWithCurrencyCodes: string;
+  rateFormat: string;
+  finalValueDate: string;
+}
+
+export interface FxDealSearchResponse {
+  recordCount: number;
+  totalRecords: number;
+  fxDeals: FxDealSearchRecord[];
+  problems: null | string;
+}

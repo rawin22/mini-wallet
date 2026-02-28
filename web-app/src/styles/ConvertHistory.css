@@ -1,6 +1,192 @@
-/* Convert History Page — placeholder styling, reuses .history-page from PaymentHistory.css */
+/* Convert History Page */
 
-.history-page .no-data {
+.convert-history-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.convert-history-page h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xl) 0;
+}
+
+/* ========================================
+   Deals List
+   ======================================== */
+
+.deals-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.deal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.deal-card:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.deal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+}
+
+.deal-ref {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  font-family: var(--font-mono);
+}
+
+.deal-type {
+  padding: 2px 10px;
+  background: rgba(27, 110, 194, 0.15);
+  border: 1px solid rgba(27, 110, 194, 0.3);
+  border-radius: var(--radius-full);
+  color: var(--accent-teal);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.deal-card-body {
+  padding: var(--space-lg);
+}
+
+/* ========================================
+   Conversion Display
+   ======================================== */
+
+.deal-conversion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background: var(--bg-hover);
+  border-radius: var(--radius-md);
+}
+
+.conversion-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.conversion-label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.conversion-side.sell .conversion-amount {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--accent-red);
+  font-variant-numeric: tabular-nums;
+}
+
+.conversion-side.buy .conversion-amount {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--accent-green);
+  font-variant-numeric: tabular-nums;
+}
+
+.conversion-arrow {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   Meta Info
+   ======================================== */
+
+.deal-meta {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.meta-label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.meta-value {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* ========================================
+   Loading / Error / Empty
+   ======================================== */
+
+.convert-history-page .loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: var(--space-md);
+  color: var(--text-secondary);
+}
+
+.convert-history-page .spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.convert-history-page .error-box {
+  padding: var(--space-lg);
+  background: rgba(239, 83, 80, 0.05);
+  border: 1px solid rgba(239, 83, 80, 0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  text-align: center;
+}
+
+.convert-history-page .error-box p {
+  color: var(--accent-red);
+  margin: 0;
+}
+
+.convert-history-page .no-data {
   text-align: center;
   padding: var(--space-2xl);
   color: var(--text-muted);
@@ -8,4 +194,28 @@
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+
+@media (max-width: 768px) {
+  .convert-history-page h1 {
+    font-size: 1.5rem;
+  }
+
+  .deal-conversion {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .conversion-arrow {
+    transform: rotate(90deg);
+  }
+
+  .deal-meta {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
 }
