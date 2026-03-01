@@ -1,6 +1,7 @@
 import React, { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage.ts';
+import { useAuth } from '../hooks/useAuth.ts';
 import { LanguageSwitcher } from '../components/LanguageSwitcher.tsx';
 import { extractSignupApiMessage, SignupError, signupService } from '../api/signup.service.ts';
 import type { NotaryNode, SignupFormConfig } from '../types/signup.types.ts';
@@ -49,6 +50,7 @@ export const Signup: React.FC = () => {
     });
     const navigate = useNavigate();
     const { t } = useLanguage();
+    const { login: authLogin } = useAuth();
     const logoSrc = theme === 'dark' ? '/winstantpay-logo-light.png' : '/winstantpay-logo.png';
 
     useEffect(() => {
@@ -135,22 +137,23 @@ export const Signup: React.FC = () => {
         setIsSubmitting(true);
 
         try {
-            const signupResponse = await signupService.register(formData);
+            await signupService.register(formData);
             setSuccess(t('auth.signupSuccess'));
 
-            window.setTimeout(() => {
-                if (signupResponse.redirectUrl.startsWith('http://') || signupResponse.redirectUrl.startsWith('https://')) {
-                    window.location.assign(signupResponse.redirectUrl);
-                    return;
-                }
-
-                navigate(signupResponse.redirectUrl, {
-                    state: {
-                        fromSignup: true,
-                        message: signupResponse.message,
-                    },
-                });
-            }, 700);
+            // Auto-login with the credentials they just signed up with, then go to verification
+            try {
+                await authLogin(formData.username, formData.password);
+                window.setTimeout(() => {
+                    navigate('/get-verified');
+                }, 700);
+            } catch {
+                // If auto-login fails, fall back to login page
+                window.setTimeout(() => {
+                    navigate('/login', {
+                        state: { fromSignup: true, message: t('auth.signupSuccess') },
+                    });
+                }, 700);
+            }
         } catch (submitError) {
             const serverMessage = extractServerErrorMessage(submitError);
 

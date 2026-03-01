@@ -14,7 +14,7 @@ export const Dashboard: React.FC = () => {
   const [balances, setBalances] = useState<CustomerBalanceData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hideZero, setHideZero] = useState(true);
+  const [hideZero, setHideZero] = useState(false);
 
   useEffect(() => {
     if (!user) return;

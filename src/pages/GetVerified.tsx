@@ -9,6 +9,7 @@ import {
     mapOcrToFormData,
     mergeOcrProperties,
     detectWizardStep,
+    parseDescriptionProperties,
 } from '../api/verification.service.ts';
 import { FileAttachmentTypeId } from '../types/verification.types.ts';
 import type {
@@ -20,6 +21,22 @@ import type {
     WizardStep,
 } from '../types/verification.types.ts';
 import '../styles/get-verified.css';
+
+/** Resolve a value that might be a country name OR a country code to a valid code */
+const resolveCountryCode = (value: string, countries: CountryInfo[]): string => {
+    if (!value) return '';
+    // Already a valid code?
+    const byCode = countries.find((c) => (c.CountryCode ?? c.countryCode ?? '') === value);
+    if (byCode) return value;
+    // Match by name (case-insensitive)
+    const upper = value.toUpperCase();
+    const byName = countries.find((c) => {
+        const name = (c.CountryName ?? c.countryName ?? '').toUpperCase();
+        return name === upper;
+    });
+    if (byName) return byName.CountryCode ?? byName.countryCode ?? '';
+    return value; // return as-is if no match
+};
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png'];
 const ACCEPTED_EXT = ['.jpg', '.jpeg', '.png'];
@@ -119,26 +136,55 @@ export const GetVerified: React.FC = () => {
             );
             if (frontAtt) {
                 setFrontAttachmentId(frontAtt.FileAttachmentId);
+
+                // Extract from OCR Properties
                 const props = frontAtt.Properties ?? frontAtt.properties;
                 if (props) {
                     setOcrProperties(props);
                     const mapped = mapOcrToFormData(props);
+                    // Resolve country name→code before setting
+                    if (mapped.countryOfIssuance) {
+                        mapped.countryOfIssuance = resolveCountryCode(mapped.countryOfIssuance, countryList);
+                    }
+                    if (mapped.nationality) {
+                        mapped.nationality = resolveCountryCode(mapped.nationality, countryList);
+                    }
                     setFormData((prev) => ({ ...prev, ...mapped }));
+                }
+
+                // Also extract from Description string (has country_of_issuance, id_type, etc.)
+                const desc = frontAtt.Description ?? frontAtt.description ?? '';
+                if (desc) {
+                    const descProps = parseDescriptionProperties(desc);
+                    console.log('[Init] Front file description properties:', descProps);
+                    setFormData((prev) => ({
+                        ...prev,
+                        countryOfIssuance: prev.countryOfIssuance || resolveCountryCode(descProps['country_of_issuance'] || '', countryList),
+                        idType: prev.idType || descProps['id_type'] || '',
+                        idNumber: prev.idNumber || descProps['account/id_number'] || '',
+                        issuerName: prev.issuerName || descProps['issuer_name'] || '',
+                        issuanceDate: prev.issuanceDate || descProps['issuance_date'] || '',
+                        expirationDate: prev.expirationDate || descProps['expiry_date'] || '',
+                    }));
                 }
             }
 
             // Pre-populate form from customer data
+            const custCountry = resolveCountryCode(customerData.IdentificationCountryCode || '', countryList);
+            const custNationality = resolveCountryCode(customerData.Nationality || '', countryList);
             setFormData((prev) => ({
                 ...prev,
                 firstName: prev.firstName || customerData.CustomerFirstName || '',
                 middleName: prev.middleName || customerData.CustomerMiddleName || '',
                 lastName: prev.lastName || customerData.CustomerLastName || '',
-                nationality: prev.nationality || customerData.Nationality || '',
+                nationality: prev.nationality || custNationality,
                 dateOfBirth: prev.dateOfBirth || customerData.DateOfBirth || '',
                 placeOfBirth: prev.placeOfBirth || customerData.CityOfBirth || '',
                 genderTypeId: prev.genderTypeId || customerData.GenderTypeId || 0,
-                countryOfIssuance: prev.countryOfIssuance || customerData.IdentificationCountryCode || '',
+                countryOfIssuance: prev.countryOfIssuance || custCountry,
             }));
+            console.log('[Init] Customer data:', JSON.stringify(customerData, null, 2));
+            console.log('[Init] Detected step:', detectedStep, 'Front attachment ID:', frontAtt?.FileAttachmentId);
 
             // If step 4 (already submitted), extract vlink info from description
             if (detectedStep === 4 && frontAtt) {
@@ -359,7 +405,7 @@ export const GetVerified: React.FC = () => {
 
         try {
             // 1. Update front file description with corrected metadata
-            await verificationService.updateFileAttachment({
+            const updateAttachmentReq1 = {
                 FileAttachmentId: frontAttachmentId,
                 GroupName: '',
                 FileAttachmentTypeId: FileAttachmentTypeId.ProofOfIdentityFront,
@@ -367,10 +413,15 @@ export const GetVerified: React.FC = () => {
                 ViewableByCustomer: true,
                 DeletableByCustomer: false,
                 Description: buildIdDescription(formData),
-            });
+            };
+            console.log('[Step3] 1/5 updateFileAttachment request:', JSON.stringify(updateAttachmentReq1, null, 2));
+            await verificationService.updateFileAttachment(updateAttachmentReq1);
+            console.log('[Step3] 1/5 updateFileAttachment OK');
 
             // 2. Update customer with corrected profile data (bank token)
-            await verificationService.updateCustomer({
+            const identTypeId = selectedIdType?.IdentificationTypeID ?? customer?.IdentificationTypeId ?? 0;
+            const countryOfBirthCode = formData.nationality || customer?.CountryOfBirthCode || formData.countryOfIssuance;
+            const updateCustomerReq = {
                 CustomerId: customerId,
                 FirstName: formData.firstName,
                 MiddleName: formData.middleName,
@@ -379,18 +430,21 @@ export const GetVerified: React.FC = () => {
                 GenderTypeId: formData.genderTypeId,
                 DateOfBirth: formData.dateOfBirth || null,
                 CityOfBirth: formData.placeOfBirth,
-                CountryOfBirthCode: '',
+                CountryOfBirthCode: countryOfBirthCode,
                 CountryCode: formData.countryOfIssuance,
-                IdentificationTypeId: 0,
+                IdentificationTypeId: identTypeId,
                 IdentificationNumber: formData.idNumber,
                 IdentificationIssuer: formData.issuerName,
                 IdentificationCountryCode: formData.countryOfIssuance,
                 IdentificationExpirationDate: formData.expirationDate || null,
-            });
+            };
+            console.log('[Step3] 2/5 updateCustomer request:', JSON.stringify(updateCustomerReq, null, 2));
+            await verificationService.updateCustomer(updateCustomerReq);
+            console.log('[Step3] 2/5 updateCustomer OK');
 
             // 3. Create VLink
             const customerName = `${formData.firstName} ${formData.lastName}`.trim();
-            const vlinkResult = await verificationService.createVerifiedLink({
+            const createVlinkReq = {
                 VerifiedLinkTypeId: 3,
                 VerifiedLinkName: customerName,
                 CustomerId: customerId,
@@ -420,24 +474,64 @@ export const GetVerified: React.FC = () => {
                 ShareIdBack: true,
                 ShareSelfie: true,
                 IsPrimary: true,
-            });
+            };
+            console.log('[Step3] 3/5 createVerifiedLink request:', JSON.stringify(createVlinkReq, null, 2));
+            const vlinkResult = await verificationService.createVerifiedLink(createVlinkReq);
+            console.log('[Step3] 3/5 createVerifiedLink OK:', JSON.stringify(vlinkResult, null, 2));
 
             setVlinkId(vlinkResult.VerifiedLinkId);
             setVlinkReference(vlinkResult.VerifiedLinkReference);
 
             // 4. Update VLink with URL
             const verifyUrl = `${window.location.origin}/verify/${vlinkResult.VerifiedLinkId}`;
-            await verificationService.updateVerifiedLink({
+            const updateVlinkReq = {
                 VerifiedLinkId: vlinkResult.VerifiedLinkId,
                 VerifiedLinkTypeId: 3,
                 VerifiedLinkName: customerName,
                 GroupName: '',
                 MinimumWKYCLevel: 0,
                 Message: `Identity verification request for ${customerName}`,
+                PublicMessage: '',
+                BlockchainMessage: '',
+                SharedWithName: '',
+                WebsiteUrl: '',
                 VerifiedLinkUrl: verifyUrl,
                 VerifiedLinkShortUrl: verifyUrl,
+                SelectedAccountAlias: '',
+                AgeConfirmOver: 0,
+                AgeConfirmUnder: 0,
+                ShareAccountAlias: false,
+                ShareBirthCity: true,
+                ShareBirthCountry: true,
+                ShareBirthDate: true,
+                ShareFirstName: true,
+                ShareMiddleName: true,
+                ShareLastName: true,
+                ShareGlobalFirstName: false,
+                ShareGlobalMiddleName: false,
+                ShareGlobalLastName: false,
+                ShareGender: true,
+                ShareNationality: true,
+                ShareSuffix: false,
+                ShareIdExpirationDate: true,
+                ShareIdNumber: true,
+                ShareIdType: true,
+                ShareIdFront: true,
+                ShareIdBack: true,
+                ShareSelfie: true,
+                ShareAgeConfirmOver: false,
+                ShareAgeConfirmUnder: false,
+                AdditionalData: '',
+                IsWalletLocked: false,
+                WalletAddress: '',
+                TokenId: '',
+                NFTReference: '',
+                NFTChain: '',
                 IsPrimary: true,
-            });
+            };
+            console.log('[Step3] 4/5 updateVerifiedLink request:', JSON.stringify(updateVlinkReq, null, 2));
+            await verificationService.updateVerifiedLink(updateVlinkReq);
+            console.log('[Step3] 4/5 updateVerifiedLink OK');
 
             // 5. Append verification metadata to front file description
             const currentDescription = buildIdDescription(formData);
@@ -450,7 +544,7 @@ export const GetVerified: React.FC = () => {
                 vlinkResult.VerifiedLinkReference,
             );
 
-            await verificationService.updateFileAttachment({
+            const updateAttachmentReq5 = {
                 FileAttachmentId: frontAttachmentId,
                 GroupName: '',
                 FileAttachmentTypeId: FileAttachmentTypeId.ProofOfIdentityFront,
@@ -458,12 +552,25 @@ export const GetVerified: React.FC = () => {
                 ViewableByCustomer: true,
                 DeletableByCustomer: false,
                 Description: fullDescription,
-            });
+            };
+            console.log('[Step3] 5/5 updateFileAttachment (metadata) request:', JSON.stringify(updateAttachmentReq5, null, 2));
+            await verificationService.updateFileAttachment(updateAttachmentReq5);
+            console.log('[Step3] 5/5 updateFileAttachment (metadata) OK');
 
             setStep(4);
         } catch (err) {
-            console.error('Step 3 submit error:', err);
-            setError(err instanceof Error ? err.message : t('verification.submitError'));
+            const axiosErr = err as { response?: { status?: number; data?: unknown } };
+            console.error('[Step3] FAILED:', err);
+            if (axiosErr.response) {
+                console.error('[Step3] Response status:', axiosErr.response.status);
+                console.error('[Step3] Response data:', JSON.stringify(axiosErr.response.data, null, 2));
+            }
+            const serverMsg = axiosErr.response?.data
+                ? (typeof axiosErr.response.data === 'object'
+                    ? ((axiosErr.response.data as Record<string, unknown>).Message ?? (axiosErr.response.data as Record<string, unknown>).message) as string | undefined
+                    : undefined)
+                : undefined;
+            setError(serverMsg || (err instanceof Error ? err.message : t('verification.submitError')));
         } finally {
             setProcessing(false);
         }

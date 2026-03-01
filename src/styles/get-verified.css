@@ -161,6 +161,32 @@
   font-size: 0.9rem;
   transition: border-color 0.2s ease;
   box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Style the select arrow */
+.gv-form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+/* Force native dropdown popups to match theme */
+[data-theme="dark"] .gv-form-group select,
+[data-theme="dark"] .gv-form-group input[type="date"] {
+  color-scheme: dark;
+}
+
+[data-theme="light"] .gv-form-group select,
+[data-theme="light"] .gv-form-group input[type="date"] {
+  color-scheme: light;
+}
+
+.gv-form-group select option {
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .gv-form-group select:focus,
@@ -193,6 +219,10 @@
   font-size: 0.85rem;
   cursor: pointer;
   box-sizing: border-box;
+}
+
+[data-theme="dark"] .gv-file-input input[type="file"] {
+  color-scheme: dark;
 }
 
 .gv-file-input input[type="file"]::file-selector-button {

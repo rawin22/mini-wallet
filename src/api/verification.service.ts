@@ -8,7 +8,7 @@ import type {
     CountryListResponse,
     CustomerGetData,
     CustomerGetResponse,
-    CustomerUpdateRequest,
+    CustomerUpdateFields,
     CustomerUpdateResponse,
     FileAttachmentAddData,
     FileAttachmentAddRequest,
@@ -211,6 +211,23 @@ export const detectWizardStep = (attachments: FileAttachmentInfoItem[]): WizardS
     return 3;
 };
 
+const normalizeIdType = (item: CountryIdentificationType): CountryIdentificationType => ({
+    CountryIdentificationTypeID: item.CountryIdentificationTypeID ?? item.countryIdentificationTypeID ?? 0,
+    CountryIdentificationTypeName: item.CountryIdentificationTypeName ?? item.countryIdentificationTypeName ?? '',
+    CountryIdentificationTypeEnglishName: item.CountryIdentificationTypeEnglishName ?? item.countryIdentificationTypeEnglishName ?? '',
+    IdentificationTypeID: item.IdentificationTypeID ?? item.identificationTypeID ?? 0,
+    IdentificationTypeName: item.IdentificationTypeName ?? item.identificationTypeName ?? '',
+    CountryCode: item.CountryCode ?? item.countryCode ?? '',
+    StateOrProvince: item.StateOrProvince ?? item.stateOrProvince ?? '',
+    Description: item.Description ?? item.description ?? '',
+    HasFullSpread: item.HasFullSpread ?? item.hasFullSpread ?? false,
+    HasBioDataPage: item.HasBioDataPage ?? item.hasBioDataPage ?? false,
+    RequireFrontSide: item.RequireFrontSide ?? item.requireFrontSide ?? true,
+    RequireBackSide: item.RequireBackSide ?? item.requireBackSide ?? false,
+    Notes: item.Notes ?? item.notes ?? '',
+    SortOrder: item.SortOrder ?? item.sortOrder ?? 0,
+});
+
 const normalizeFileAttachment = (item: FileAttachmentInfoItem): FileAttachmentInfoItem => ({
     FileAttachmentId: item.FileAttachmentId ?? item.fileAttachmentId ?? '',
     FileAttachmentTypeId: item.FileAttachmentTypeId ?? item.fileAttachmentTypeId ?? 0,
@@ -249,7 +266,8 @@ export const verificationService = {
             `${API_CONFIG.ENDPOINTS.COUNTRY.ID_TYPES}/${encodeURIComponent(countryCode)}`,
         );
         assertSuccessful(response.data, 'idTypesFailed', 'Failed to load identification types.');
-        return response.data.IdentificationTypes ?? response.data.identificationTypes ?? [];
+        const items = response.data.IdentificationTypes ?? response.data.identificationTypes ?? [];
+        return items.map(normalizeIdType);
     },
 
     async getFileAttachmentInfoList(customerId: string): Promise<FileAttachmentInfoItem[]> {
@@ -297,11 +315,157 @@ export const verificationService = {
         assertSuccessful(response.data, 'deleteAttachmentFailed', 'Failed to delete file attachment.');
     },
 
-    async updateCustomer(request: CustomerUpdateRequest): Promise<void> {
+    async updateCustomer(fields: CustomerUpdateFields): Promise<void> {
         const headers = await bankAuthHeaders();
+
+        // The API requires ALL fields in the DTO. Fetch current customer first, then merge our changes.
+        const getResponse = await apiClient.get<Record<string, unknown>>(
+            `${API_CONFIG.ENDPOINTS.CUSTOMER.GET}/${fields.CustomerId}`,
+            { headers },
+        );
+        const customerRaw = (getResponse.data as Record<string, unknown>).Customer
+            ?? (getResponse.data as Record<string, unknown>).customer
+            ?? {};
+        const fullPayload: Record<string, unknown> = { ...(customerRaw as Record<string, unknown>), ...fields };
+
+        // Remove read-only / response-only fields not in the CustomerUpdateRequest DTO
+        const removeFields = [
+            'Timestamp', 'timestamp',
+            'CreatedTime', 'createdTime',
+            'CustomerTypeName', 'customerTypeName',
+            'BranchName', 'branchName',
+            'BranchCountryCode', 'branchCountryCode',
+            'BankId', 'bankId',
+            'AccountRepresentativeName', 'accountRepresentativeName',
+            'GenderTypeName', 'genderTypeName',
+            'IdentificationTypeName', 'identificationTypeName',
+            'IdentificationIssuedDate', 'identificationIssuedDate',
+            'OccupationTypeName', 'occupationTypeName',
+            'BusinessStructureTypeName', 'businessStructureTypeName',
+            'AttachedIds', 'attachedIds',
+            'TrustScore', 'trustScore',
+            'SwiftAddressLine1', 'swiftAddressLine1',
+            'SwiftAddressLine2', 'swiftAddressLine2',
+            'SwiftAddressLine3', 'swiftAddressLine3',
+            'WebsiteURL', 'websiteURL', // GET returns websiteURL, DTO expects WebsiteUrl
+            'CustomerFirstName', 'customerFirstName',
+            'CustomerMiddleName', 'customerMiddleName',
+            'CustomerLastName', 'customerLastName',
+            'GlobalCustomerFirstName', 'globalCustomerFirstName',
+            'GlobalCustomerMiddleName', 'globalCustomerMiddleName',
+            'GlobalCustomerLastName', 'globalCustomerLastName',
+        ];
+        for (const key of removeFields) {
+            delete fullPayload[key];
+        }
+
+        // Fix Guid fields — the GET response may return empty strings for Guids,
+        // but the PATCH DTO requires valid Guid format. Replace empty/invalid with zero Guid.
+        const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
+        const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        // Nullable Guid? fields — keep null if null, fix invalid strings
+        const nullableGuidFields = new Set([
+            'WhiteLabelProfileId', 'whiteLabelProfileId',
+        ]);
+        // Required Guid fields — must have a valid value
+        const requiredGuidFields = [
+            'BranchId', 'branchId',
+            'AccountRepresentativeId', 'accountRepresentativeId',
+            'FXDealTypeTemplateId', 'fxDealTypeTemplateId',
+            'SettlementTypeTemplateId', 'settlementTypeTemplateId',
+            'FeeTemplateId', 'feeTemplateId',
+            'CurrencyPairAccessTemplateId', 'currencyPairAccessTemplateId',
+            'CashSpreadTemplateId', 'cashSpreadTemplateId',
+            'TomsSpreadTemplateId', 'tomsSpreadTemplateId',
+            'SpotSpreadTemplateId', 'spotSpreadTemplateId',
+            'ForwardOutrightSpreadTemplateId', 'forwardOutrightSpreadTemplateId',
+            'ForwardWindowSpreadTemplateId', 'forwardWindowSpreadTemplateId',
+            'CashCoverRateSpreadTemplateId', 'cashCoverRateSpreadTemplateId',
+            'TomsCoverRateSpreadTemplateId', 'tomsCoverRateSpreadTemplateId',
+            'SpotCoverRateSpreadTemplateId', 'spotCoverRateSpreadTemplateId',
+            'ForwardOutrightCoverRateSpreadTemplateId', 'forwardOutrightCoverRateSpreadTemplateId',
+            'ForwardWindowCoverRateSpreadTemplateId', 'forwardWindowCoverRateSpreadTemplateId',
+            'IncomingPaymentSpreadTemplateId', 'incomingPaymentSpreadTemplateId',
+            'IncomingPaymentCoverRateSpreadTemplateId', 'incomingPaymentCoverRateSpreadTemplateId',
+            'ReferrerId', 'referrerId',
+            'CustomerId', 'customerId',
+        ];
+        for (const key of requiredGuidFields) {
+            if (key in fullPayload) {
+                const val = fullPayload[key];
+                if (typeof val === 'string' && !GUID_RE.test(val)) {
+                    fullPayload[key] = ZERO_GUID;
+                }
+                if (val === null || val === undefined) {
+                    fullPayload[key] = ZERO_GUID;
+                }
+            }
+        }
+        for (const key of nullableGuidFields) {
+            if (key in fullPayload) {
+                const val = fullPayload[key];
+                if (val === undefined) {
+                    fullPayload[key] = null; // keep null for nullable Guids
+                } else if (typeof val === 'string' && !GUID_RE.test(val)) {
+                    fullPayload[key] = null; // invalid string → null
+                }
+            }
+        }
+
+        // Fix field name mismatches between GET response and PATCH DTO
+        // GET returns "websiteURL", DTO expects "WebsiteUrl"
+        if (!('WebsiteUrl' in fullPayload) && !('websiteUrl' in fullPayload)) {
+            fullPayload['WebsiteUrl'] = fullPayload['WebsiteURL'] ?? fullPayload['websiteURL'] ?? '';
+        }
+
+        // Ensure Global name fields are set (API requires PascalCase versions)
+        fullPayload['GlobalFirstName'] = fullPayload['GlobalFirstName'] ?? fullPayload['globalFirstName'] ?? fields.FirstName ?? '';
+        fullPayload['GlobalMiddleName'] = fullPayload['GlobalMiddleName'] ?? fullPayload['globalMiddleName'] ?? fields.MiddleName ?? '';
+        fullPayload['GlobalLastName'] = fullPayload['GlobalLastName'] ?? fullPayload['globalLastName'] ?? fields.LastName ?? '';
+        fullPayload['GlobalCustomerName'] = fullPayload['GlobalCustomerName'] ?? fullPayload['globalCustomerName']
+            ?? `${fields.FirstName} ${fields.LastName}`.trim();
+        fullPayload['CustomerName'] = fullPayload['CustomerName'] ?? fullPayload['customerName']
+            ?? `${fields.FirstName} ${fields.LastName}`.trim();
+
+        // Fix type mismatches from the GET response before sending to PATCH.
+        // The C# DTO has strict types — booleans must be bool, nullable bools can be null, etc.
+        const nullableBoolFields = new Set(['IsUSPerson', 'isUSPerson']);
+        const boolFields = new Set([
+            'IsEnabled', 'isEnabled', 'IsApproved', 'isApproved', 'IsBank', 'isBank',
+            'IsBusinessAccount', 'isBusinessAccount', 'IsAutoCoverEnabled', 'isAutoCoverEnabled',
+            'IsDualControlEnabled', 'isDualControlEnabled', 'IsPaymentEnabled', 'isPaymentEnabled',
+            'IsFXTradingEnabled', 'isFXTradingEnabled', 'IsCurrencyCalculatorEnabled', 'isCurrencyCalculatorEnabled',
+            'IsCashIn', 'isCashIn', 'IsCashOut', 'isCashOut', 'IsWKYCVerifier', 'isWKYCVerifier',
+            'AllowThirdPartyPayments', 'allowThirdPartyPayments', 'IsCharity', 'isCharity',
+            'IgnoreWarningsOnCreate', 'ignoreWarningsOnCreate',
+        ]);
+        for (const [key, val] of Object.entries(fullPayload)) {
+            if (nullableBoolFields.has(key)) {
+                // Nullable bool: keep null, convert strings to bool or null
+                if (val === '' || val === undefined) {
+                    fullPayload[key] = null;
+                } else if (typeof val === 'string') {
+                    fullPayload[key] = val.toLowerCase() === 'true';
+                }
+            } else if (boolFields.has(key)) {
+                // Non-nullable bool: default to false
+                if (val === '' || val === null || val === undefined) {
+                    fullPayload[key] = false;
+                } else if (typeof val === 'string') {
+                    fullPayload[key] = val.toLowerCase() === 'true';
+                }
+            } else if ((val === null || val === undefined) && !nullableGuidFields.has(key)) {
+                // Default: strings get empty, keep the rest (but preserve nullable Guids as null)
+                fullPayload[key] = '';
+            }
+        }
+
+        console.log('[updateCustomer] Merged payload keys:', Object.keys(fullPayload).length);
+        console.log('[updateCustomer] Our fields:', JSON.stringify(fields, null, 2));
+
         const response = await apiClient.patch<CustomerUpdateResponse>(
             API_CONFIG.ENDPOINTS.CUSTOMER.UPDATE,
-            request,
+            fullPayload,
             { headers },
         );
         assertSuccessful(response.data, 'customerUpdateFailed', 'Failed to update customer data.');

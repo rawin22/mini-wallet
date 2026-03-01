@@ -40,6 +40,21 @@ export interface CountryIdentificationType {
     RequireBackSide: boolean;
     Notes: string;
     SortOrder: number;
+    // camelCase alternatives from API
+    countryIdentificationTypeID?: number;
+    countryIdentificationTypeName?: string;
+    countryIdentificationTypeEnglishName?: string;
+    identificationTypeID?: number;
+    identificationTypeName?: string;
+    countryCode?: string;
+    stateOrProvince?: string;
+    description?: string;
+    hasFullSpread?: boolean;
+    hasBioDataPage?: boolean;
+    requireFrontSide?: boolean;
+    requireBackSide?: boolean;
+    notes?: string;
+    sortOrder?: number;
 }
 
 export interface CountryIdTypeListResponse extends SignupResponseBase {
@@ -83,7 +98,8 @@ export interface CustomerGetResponse extends SignupResponseBase {
     customer?: CustomerGetData;
 }
 
-export interface CustomerUpdateRequest {
+/** Fields we want to update on the customer — merged with full customer GET before PATCH */
+export interface CustomerUpdateFields {
     CustomerId: string;
     FirstName: string;
     MiddleName: string;
@@ -228,8 +244,42 @@ export interface VerifiedLinkUpdateRequest {
     GroupName: string;
     MinimumWKYCLevel: number;
     Message: string;
+    PublicMessage: string;
+    BlockchainMessage: string;
+    SharedWithName: string;
+    WebsiteUrl: string;
     VerifiedLinkUrl: string;
     VerifiedLinkShortUrl: string;
+    SelectedAccountAlias: string;
+    AgeConfirmOver: number;
+    AgeConfirmUnder: number;
+    ShareAccountAlias: boolean;
+    ShareBirthCity: boolean;
+    ShareBirthCountry: boolean;
+    ShareBirthDate: boolean;
+    ShareFirstName: boolean;
+    ShareMiddleName: boolean;
+    ShareLastName: boolean;
+    ShareGlobalFirstName: boolean;
+    ShareGlobalMiddleName: boolean;
+    ShareGlobalLastName: boolean;
+    ShareGender: boolean;
+    ShareNationality: boolean;
+    ShareSuffix: boolean;
+    ShareIdExpirationDate: boolean;
+    ShareIdNumber: boolean;
+    ShareIdType: boolean;
+    ShareIdFront: boolean;
+    ShareIdBack: boolean;
+    ShareSelfie: boolean;
+    ShareAgeConfirmOver: boolean;
+    ShareAgeConfirmUnder: boolean;
+    AdditionalData: string;
+    IsWalletLocked: boolean;
+    WalletAddress: string;
+    TokenId: string;
+    NFTReference: string;
+    NFTChain: string;
     IsPrimary: boolean;
 }
 
