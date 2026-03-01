@@ -244,6 +244,95 @@
 }
 
 /* ========================================
+   Selfie / Camera
+   ======================================== */
+
+.gv-selfie-area {
+  margin-bottom: var(--space-md);
+}
+
+.gv-selfie-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.gv-camera-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+}
+
+.gv-selfie-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-md);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.gv-selfie-divider::before,
+.gv-selfie-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.gv-camera-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.gv-camera-preview {
+  width: 100%;
+  max-width: 480px;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--accent-blue);
+  background: #000;
+  transform: scaleX(-1);
+}
+
+.gv-camera-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+}
+
+.gv-selfie-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.gv-selfie-img {
+  width: 100%;
+  max-width: 480px;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--accent-green);
+}
+
+.secondary-btn {
+  padding: 8px 16px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.15s ease;
+}
+
+.secondary-btn:hover {
+  background: var(--bg-input);
+}
+
+/* ========================================
    Actions
    ======================================== */
 

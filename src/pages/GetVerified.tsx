@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth.ts';
 import { useLanguage } from '../hooks/useLanguage.ts';
 import {
@@ -88,6 +88,10 @@ export const GetVerified: React.FC = () => {
 
     // Step 2 state
     const [selfieFile, setSelfieFile] = useState<File | null>(null);
+    const [cameraActive, setCameraActive] = useState(false);
+    const [selfiePreview, setSelfiePreview] = useState<string | null>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const streamRef = useRef<MediaStream | null>(null);
 
     // Step 3 review state
     const [formData, setFormData] = useState<VerificationFormData>(emptyFormData);
@@ -396,6 +400,63 @@ export const GetVerified: React.FC = () => {
             setProcessing(false);
         }
     };
+
+    // ── Camera functions ──
+    const stopCamera = useCallback(() => {
+        if (streamRef.current) {
+            streamRef.current.getTracks().forEach((track) => track.stop());
+            streamRef.current = null;
+        }
+        setCameraActive(false);
+    }, []);
+
+    const startCamera = async () => {
+        setError(null);
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+            });
+            streamRef.current = stream;
+            setCameraActive(true);
+            // Wait for video element to render, then attach stream
+            requestAnimationFrame(() => {
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                }
+            });
+        } catch {
+            setError(t('verification.cameraError'));
+        }
+    };
+
+    const capturePhoto = () => {
+        if (!videoRef.current) return;
+        const video = videoRef.current;
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.drawImage(video, 0, 0);
+        canvas.toBlob((blob) => {
+            if (!blob) return;
+            const file = new File([blob], `selfie_${Date.now()}.jpg`, { type: 'image/jpeg' });
+            setSelfieFile(file);
+            setSelfiePreview(canvas.toDataURL('image/jpeg', 0.9));
+            stopCamera();
+        }, 'image/jpeg', 0.9);
+    };
+
+    const retakeSelfie = () => {
+        setSelfieFile(null);
+        setSelfiePreview(null);
+        startCamera();
+    };
+
+    // Stop camera when leaving step 2
+    useEffect(() => {
+        if (step !== 2) stopCamera();
+    }, [step, stopCamera]);
 
     // ── Step 3: Submit Verification ──
     const handleStep3Submit = async () => {
@@ -765,16 +826,64 @@ export const GetVerified: React.FC = () => {
                     <h2>{t('verification.step2Title')}</h2>
                     <p className="gv-hint">{t('verification.step2Hint')}</p>
 
-                    <div className="gv-form-group">
-                        <label>{t('verification.selfieFile')}</label>
-                        <div className="gv-file-input">
-                            <input
-                                type="file"
-                                accept=".jpg,.jpeg,.png"
-                                onChange={(e) => handleFileSelect(setSelfieFile, e)}
-                            />
-                            {selfieFile && <span className="gv-file-name">{selfieFile.name}</span>}
-                        </div>
+                    <div className="gv-selfie-area">
+                        {/* Camera preview */}
+                        {cameraActive && !selfiePreview && (
+                            <div className="gv-camera-container">
+                                <video
+                                    ref={videoRef}
+                                    autoPlay
+                                    playsInline
+                                    muted
+                                    className="gv-camera-preview"
+                                />
+                                <div className="gv-camera-actions">
+                                    <button className="primary-btn" onClick={capturePhoto} type="button">
+                                        {t('verification.capture')}
+                                    </button>
+                                    <button className="secondary-btn" onClick={stopCamera} type="button">
+                                        {t('common.cancel')}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Selfie preview after capture */}
+                        {selfiePreview && (
+                            <div className="gv-selfie-preview">
+                                <img src={selfiePreview} alt="Selfie preview" className="gv-selfie-img" />
+                                <button className="secondary-btn" onClick={retakeSelfie} type="button">
+                                    {t('verification.retake')}
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Initial state: camera + file upload buttons */}
+                        {!cameraActive && !selfiePreview && (
+                            <div className="gv-selfie-options">
+                                <button className="primary-btn gv-camera-btn" onClick={startCamera} type="button">
+                                    {t('verification.openCamera')}
+                                </button>
+                                <div className="gv-selfie-divider">
+                                    <span>{t('verification.orUploadFile')}</span>
+                                </div>
+                                <div className="gv-file-input">
+                                    <input
+                                        type="file"
+                                        accept=".jpg,.jpeg,.png"
+                                        capture="user"
+                                        onChange={(e) => {
+                                            handleFileSelect(setSelfieFile, e);
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                const url = URL.createObjectURL(file);
+                                                setSelfiePreview(url);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="gv-actions">
