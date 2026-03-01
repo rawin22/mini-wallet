@@ -2,7 +2,7 @@ import React, { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage.ts';
 import { LanguageSwitcher } from '../components/LanguageSwitcher.tsx';
-import { SignupError, signupService } from '../api/signup.service.ts';
+import { extractSignupApiMessage, SignupError, signupService } from '../api/signup.service.ts';
 import type { NotaryNode, SignupFormConfig } from '../types/signup.types.ts';
 import '../styles/Signup.css';
 
@@ -86,107 +86,9 @@ export const Signup: React.FC = () => {
     };
 
     const extractServerErrorMessage = (error: unknown): string | undefined => {
-        const readResponseDataMessage = (data: unknown): string | undefined => {
-            if (!data || typeof data !== 'object') return undefined;
-
-            const payload = data as {
-                ErrorMessages?: unknown;
-                errorMessages?: unknown;
-                Problems?: unknown;
-                problems?: unknown;
-                message?: unknown;
-                Message?: unknown;
-                detail?: unknown;
-                Detail?: unknown;
-            };
-
-            const upperErrors = Array.isArray(payload.ErrorMessages)
-                ? payload.ErrorMessages.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
-                : [];
-            if (upperErrors.length > 0) return upperErrors[0];
-
-            const lowerErrors = Array.isArray(payload.errorMessages)
-                ? payload.errorMessages.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
-                : [];
-            if (lowerErrors.length > 0) return lowerErrors[0];
-
-            const upperProblems = Array.isArray(payload.Problems) ? payload.Problems : [];
-            for (const problem of upperProblems) {
-                if (problem && typeof problem === 'object') {
-                    const candidate = problem as {
-                        message?: unknown;
-                        Message?: unknown;
-                        detail?: unknown;
-                        Detail?: unknown;
-                    };
-
-                    if (typeof candidate.message === 'string' && candidate.message.trim().length > 0) {
-                        return candidate.message;
-                    }
-
-                    if (typeof candidate.Message === 'string' && candidate.Message.trim().length > 0) {
-                        return candidate.Message;
-                    }
-
-                    if (typeof candidate.detail === 'string' && candidate.detail.trim().length > 0) {
-                        return candidate.detail;
-                    }
-
-                    if (typeof candidate.Detail === 'string' && candidate.Detail.trim().length > 0) {
-                        return candidate.Detail;
-                    }
-                }
-            }
-
-            const lowerProblems = Array.isArray(payload.problems) ? payload.problems : [];
-            for (const problem of lowerProblems) {
-                if (problem && typeof problem === 'object') {
-                    const candidate = problem as {
-                        message?: unknown;
-                        Message?: unknown;
-                        detail?: unknown;
-                        Detail?: unknown;
-                    };
-
-                    if (typeof candidate.message === 'string' && candidate.message.trim().length > 0) {
-                        return candidate.message;
-                    }
-
-                    if (typeof candidate.Message === 'string' && candidate.Message.trim().length > 0) {
-                        return candidate.Message;
-                    }
-
-                    if (typeof candidate.detail === 'string' && candidate.detail.trim().length > 0) {
-                        return candidate.detail;
-                    }
-
-                    if (typeof candidate.Detail === 'string' && candidate.Detail.trim().length > 0) {
-                        return candidate.Detail;
-                    }
-                }
-            }
-
-            if (typeof payload.message === 'string' && payload.message.trim().length > 0) {
-                return payload.message;
-            }
-
-            if (typeof payload.Message === 'string' && payload.Message.trim().length > 0) {
-                return payload.Message;
-            }
-
-            if (typeof payload.detail === 'string' && payload.detail.trim().length > 0) {
-                return payload.detail;
-            }
-
-            if (typeof payload.Detail === 'string' && payload.Detail.trim().length > 0) {
-                return payload.Detail;
-            }
-
-            return undefined;
-        };
-
         if (error instanceof SignupError) {
-            const responseDataMessage = readResponseDataMessage((error as unknown as { response?: { data?: unknown } }).response?.data);
+            const responseDataMessage = extractSignupApiMessage(error.responseData)
+                || extractSignupApiMessage((error as unknown as { response?: { data?: unknown } }).response?.data);
             if (responseDataMessage) return responseDataMessage;
 
             if (typeof error.message === 'string' && error.message.trim().length > 0 && error.message !== error.code) {
@@ -196,7 +98,7 @@ export const Signup: React.FC = () => {
 
         if (error && typeof error === 'object') {
             const maybeAxios = error as { response?: { data?: unknown }; message?: unknown };
-            const responseDataMessage = readResponseDataMessage(maybeAxios.response?.data);
+            const responseDataMessage = extractSignupApiMessage(maybeAxios.response?.data);
             if (responseDataMessage) return responseDataMessage;
 
             if (typeof maybeAxios.message === 'string' && maybeAxios.message.trim().length > 0) {

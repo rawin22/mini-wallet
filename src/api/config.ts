@@ -10,39 +10,45 @@ const parseBoolean = (value: string | undefined, defaultValue: boolean): boolean
   return value.trim().toLowerCase() === 'true';
 };
 
+const DEFAULT_NOTARY_NODES: NotaryNodeConfig[] = [
+  {
+    branchId: '82b42669-ac24-e911-9109-3ee1a118192f',
+    name: 'World KYC HK - Hong Kong',
+    countryCode: 'HK',
+    isDefault: true,
+  },
+  {
+    branchId: 'adbc61a1-648e-e811-bca9-002590067f61',
+    name: 'TradeEnabler TH - Thailand',
+    countryCode: 'TH',
+    isDefault: false,
+  },
+];
+
 const parseNotaryNodes = (): NotaryNodeConfig[] => {
   const rawNodes = import.meta.env.VITE_SIGNUP_NOTARY_NODES as string | undefined;
   if (!rawNodes) {
-    return [
-      {
-        branchId: '82b42669-ac24-e911-9109-3ee1a118192f',
-        name: 'WinstantGold SX - Sint Maarten',
-        countryCode: 'SX',
-        isDefault: true,
-      },
-      {
-        branchId: 'adbc61a1-648e-e811-bca9-002590067f61',
-        name: 'WinstantGold US - United States',
-        countryCode: 'US',
-        isDefault: false,
-      },
-      {
-        branchId: '7c13a3e7-f8b5-ee11-a568-002248afce03',
-        name: 'WinstantGold EU - Europe',
-        countryCode: 'EU',
-        isDefault: false,
-      },
-    ];
+    return DEFAULT_NOTARY_NODES;
   }
 
   try {
     const parsed = JSON.parse(rawNodes) as NotaryNodeConfig[];
     if (!Array.isArray(parsed) || parsed.length === 0) {
-      return [];
+      return DEFAULT_NOTARY_NODES;
     }
-    return parsed.filter((node) => !!node.branchId && !!node.name && !!node.countryCode);
+
+    const filtered = parsed.filter((node) => !!node.branchId && !!node.name && !!node.countryCode);
+    if (filtered.length === 0) {
+      return DEFAULT_NOTARY_NODES;
+    }
+
+    if (!filtered.some((node) => node.isDefault)) {
+      return [{ ...filtered[0], isDefault: true }, ...filtered.slice(1)];
+    }
+
+    return filtered;
   } catch {
-    return [];
+    return DEFAULT_NOTARY_NODES;
   }
 };
 
