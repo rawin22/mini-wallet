@@ -1,0 +1,359 @@
+/* Get Verified Page */
+
+.get-verified-page {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.get-verified-page .gv-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin: 0 0 var(--space-lg) 0;
+}
+
+/* ========================================
+   Loading
+   ======================================== */
+
+.gv-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: var(--space-md);
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   Step Indicator
+   ======================================== */
+
+.gv-steps {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.gv-step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.gv-step-indicator.active,
+.gv-step-indicator.completed {
+  opacity: 1;
+}
+
+.gv-step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 2px solid var(--border-subtle);
+  transition: all 0.2s ease;
+}
+
+.gv-step-indicator.active .gv-step-number {
+  background: var(--accent-blue);
+  color: #fff;
+  border-color: var(--accent-blue);
+  box-shadow: var(--glow-blue);
+}
+
+.gv-step-indicator.completed .gv-step-number {
+  background: var(--accent-green);
+  color: #fff;
+  border-color: var(--accent-green);
+}
+
+.gv-step-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 80px;
+}
+
+/* ========================================
+   Card
+   ======================================== */
+
+.gv-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  animation: fadeInUp 0.3s ease;
+}
+
+.gv-card h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.gv-hint {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0 0 var(--space-lg) 0;
+}
+
+/* ========================================
+   Error
+   ======================================== */
+
+.gv-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--accent-red);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  margin-bottom: var(--space-lg);
+  color: var(--accent-red);
+  font-size: 0.875rem;
+}
+
+.gv-error p {
+  margin: 0;
+}
+
+/* ========================================
+   Form Elements
+   ======================================== */
+
+.gv-form-group {
+  margin-bottom: var(--space-md);
+  flex: 1;
+}
+
+.gv-form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.gv-form-group select,
+.gv-form-group input[type="text"],
+.gv-form-group input[type="date"] {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.gv-form-group select:focus,
+.gv-form-group input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+.gv-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-sm);
+}
+
+/* ========================================
+   File Input
+   ======================================== */
+
+.gv-file-input {
+  position: relative;
+}
+
+.gv-file-input input[type="file"] {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.gv-file-input input[type="file"]::file-selector-button {
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-right: 8px;
+}
+
+.gv-file-name {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: var(--accent-green);
+}
+
+/* ========================================
+   Actions
+   ======================================== */
+
+.gv-actions {
+  margin-top: var(--space-lg);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+}
+
+.gv-actions .primary-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.spinner-sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+/* ========================================
+   Already Verified
+   ======================================== */
+
+.gv-verified {
+  text-align: center;
+}
+
+.gv-verified-icon,
+.gv-success-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+/* ========================================
+   Confirmation (Step 4)
+   ======================================== */
+
+.gv-confirmation {
+  text-align: center;
+}
+
+.gv-confirmation-details {
+  margin: var(--space-lg) 0;
+  text-align: left;
+}
+
+.gv-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.gv-detail-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.gv-detail-value {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
+.gv-copy-btn {
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.gv-copy-btn:hover {
+  background: var(--bg-input);
+}
+
+/* ========================================
+   Summary
+   ======================================== */
+
+.gv-summary {
+  margin-top: var(--space-lg);
+  text-align: left;
+}
+
+.gv-summary h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.gv-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.gv-summary-grid strong {
+  color: var(--text-primary);
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+
+@media (max-width: 600px) {
+  .gv-steps {
+    gap: var(--space-sm);
+  }
+
+  .gv-step-label {
+    display: none;
+  }
+
+  .gv-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .gv-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gv-detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

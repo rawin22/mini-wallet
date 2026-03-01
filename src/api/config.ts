@@ -66,10 +66,23 @@ export const API_CONFIG = {
       LINK_ACCESS_RIGHT_TEMPLATE: '/api/v1/User/LinkAccessRightTemplate',
     },
     CUSTOMER: {
+      GET: '/api/v1/Customer',
+      UPDATE: '/api/v1/Customer',
       BALANCES: '/api/v1/CustomerAccountBalance',
       STATEMENT: '/api/v1/CustomerAccountStatement',
       FROM_TEMPLATE: '/api/v1/Customer/FromTemplate',
       USER: '/api/v1/CustomerUser',
+    },
+    COUNTRY: {
+      LIST: '/api/v1/CountryList',
+      ID_TYPES: '/api/v1/CountryIdentificationTypeList',
+    },
+    FILE_ATTACHMENT: {
+      BASE: '/api/v1/FileAttachment',
+      INFO_LIST: '/api/v1/FileAttachmentInfoList',
+    },
+    VERIFIED_LINK: {
+      BASE: '/api/v1/VerifiedLink',
     },
     INSTANT_PAYMENT: {
       CREATE: '/api/v1/InstantPayment',

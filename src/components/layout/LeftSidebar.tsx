@@ -21,6 +21,7 @@ const menuItems: MenuItem[] = [
   { id: 'dashboard', labelKey: 'nav.dashboard', icon: '\u{1F4CA}', path: '/dashboard' },
   { id: 'pay-now', labelKey: 'nav.payNow', icon: '\u26A1', path: '/pay-now' },
   { id: 'exchange', labelKey: 'nav.exchange', icon: '\u{1F504}', path: '/exchange' },
+  { id: 'get-verified', labelKey: 'nav.getVerified', icon: '\u2713', path: '/get-verified' },
   {
     id: 'history',
     labelKey: 'nav.history',

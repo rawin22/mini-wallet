@@ -6,7 +6,9 @@
       "Bash(git remote set-url origin rawin22:rawin22/mini-wallet.git)",
       "Bash(/home/ralf/src/private/winner/mini-wallet/.venv/bin/python -m ruff check /home/ralf/src/private/winner/mini-wallet/scripts/fx_deal.py)",
       "Bash(npm run build)",
-      "Bash(npx eslint .)"
+      "Bash(npx eslint .)",
+      "Bash(npx tsc -b --noEmit)",
+      "Bash(npx eslint src/api/verification.service.ts src/types/verification.types.ts src/pages/GetVerified.tsx src/api/config.ts src/App.tsx src/components/layout/LeftSidebar.tsx)"
     ]
   }
 }
