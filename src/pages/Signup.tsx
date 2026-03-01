@@ -2,6 +2,8 @@ import React, { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage.ts';
 import { LanguageSwitcher } from '../components/LanguageSwitcher.tsx';
+import { SignupError, signupService } from '../api/signup.service.ts';
+import type { NotaryNode, SignupFormConfig } from '../types/signup.types.ts';
 import '../styles/Signup.css';
 
 const THEME_KEY = 'app_theme';
@@ -15,7 +17,7 @@ interface SignupFormState {
     firstName: string;
     lastName: string;
     referredBy: string;
-    notaryNode: string;
+    notaryNodeBranchId: string;
 }
 
 const initialState: SignupFormState = {
@@ -27,11 +29,18 @@ const initialState: SignupFormState = {
     firstName: '',
     lastName: '',
     referredBy: '',
-    notaryNode: 'WinstantGold SX - Sint Maarten',
+    notaryNodeBranchId: '',
+};
+
+const defaultFormConfig: SignupFormConfig = {
+    isReferredByRequired: false,
+    notaryNodes: [],
 };
 
 export const Signup: React.FC = () => {
     const [formData, setFormData] = useState<SignupFormState>(initialState);
+    const [formConfig, setFormConfig] = useState<SignupFormConfig>(defaultFormConfig);
+    const [isConfigLoading, setIsConfigLoading] = useState(true);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,6 +56,27 @@ export const Signup: React.FC = () => {
         localStorage.setItem(THEME_KEY, theme);
     }, [theme]);
 
+    useEffect(() => {
+        const loadConfig = async () => {
+            try {
+                const config = await signupService.loadSignupFormConfig();
+                const fallbackNode = config.notaryNodes.find((node) => node.isDefault) ?? config.notaryNodes[0];
+
+                setFormConfig(config);
+                setFormData((prev) => ({
+                    ...prev,
+                    notaryNodeBranchId: fallbackNode?.branchId || prev.notaryNodeBranchId,
+                }));
+            } catch (loadError) {
+                console.error('Failed to load signup configuration', loadError);
+            } finally {
+                setIsConfigLoading(false);
+            }
+        };
+
+        void loadConfig();
+    }, [t]);
+
     const toggleTheme = () => {
         setTheme((current) => (current === 'light' ? 'dark' : 'light'));
     };
@@ -55,24 +85,195 @@ export const Signup: React.FC = () => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
+    const extractServerErrorMessage = (error: unknown): string | undefined => {
+        const readResponseDataMessage = (data: unknown): string | undefined => {
+            if (!data || typeof data !== 'object') return undefined;
+
+            const payload = data as {
+                ErrorMessages?: unknown;
+                errorMessages?: unknown;
+                Problems?: unknown;
+                problems?: unknown;
+                message?: unknown;
+                Message?: unknown;
+                detail?: unknown;
+                Detail?: unknown;
+            };
+
+            const upperErrors = Array.isArray(payload.ErrorMessages)
+                ? payload.ErrorMessages.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+                : [];
+            if (upperErrors.length > 0) return upperErrors[0];
+
+            const lowerErrors = Array.isArray(payload.errorMessages)
+                ? payload.errorMessages.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+                : [];
+            if (lowerErrors.length > 0) return lowerErrors[0];
+
+            const upperProblems = Array.isArray(payload.Problems) ? payload.Problems : [];
+            for (const problem of upperProblems) {
+                if (problem && typeof problem === 'object') {
+                    const candidate = problem as {
+                        message?: unknown;
+                        Message?: unknown;
+                        detail?: unknown;
+                        Detail?: unknown;
+                    };
+
+                    if (typeof candidate.message === 'string' && candidate.message.trim().length > 0) {
+                        return candidate.message;
+                    }
+
+                    if (typeof candidate.Message === 'string' && candidate.Message.trim().length > 0) {
+                        return candidate.Message;
+                    }
+
+                    if (typeof candidate.detail === 'string' && candidate.detail.trim().length > 0) {
+                        return candidate.detail;
+                    }
+
+                    if (typeof candidate.Detail === 'string' && candidate.Detail.trim().length > 0) {
+                        return candidate.Detail;
+                    }
+                }
+            }
+
+            const lowerProblems = Array.isArray(payload.problems) ? payload.problems : [];
+            for (const problem of lowerProblems) {
+                if (problem && typeof problem === 'object') {
+                    const candidate = problem as {
+                        message?: unknown;
+                        Message?: unknown;
+                        detail?: unknown;
+                        Detail?: unknown;
+                    };
+
+                    if (typeof candidate.message === 'string' && candidate.message.trim().length > 0) {
+                        return candidate.message;
+                    }
+
+                    if (typeof candidate.Message === 'string' && candidate.Message.trim().length > 0) {
+                        return candidate.Message;
+                    }
+
+                    if (typeof candidate.detail === 'string' && candidate.detail.trim().length > 0) {
+                        return candidate.detail;
+                    }
+
+                    if (typeof candidate.Detail === 'string' && candidate.Detail.trim().length > 0) {
+                        return candidate.Detail;
+                    }
+                }
+            }
+
+            if (typeof payload.message === 'string' && payload.message.trim().length > 0) {
+                return payload.message;
+            }
+
+            if (typeof payload.Message === 'string' && payload.Message.trim().length > 0) {
+                return payload.Message;
+            }
+
+            if (typeof payload.detail === 'string' && payload.detail.trim().length > 0) {
+                return payload.detail;
+            }
+
+            if (typeof payload.Detail === 'string' && payload.Detail.trim().length > 0) {
+                return payload.Detail;
+            }
+
+            return undefined;
+        };
+
+        if (error instanceof SignupError) {
+            const responseDataMessage = readResponseDataMessage((error as unknown as { response?: { data?: unknown } }).response?.data);
+            if (responseDataMessage) return responseDataMessage;
+
+            if (typeof error.message === 'string' && error.message.trim().length > 0 && error.message !== error.code) {
+                return error.message;
+            }
+        }
+
+        if (error && typeof error === 'object') {
+            const maybeAxios = error as { response?: { data?: unknown }; message?: unknown };
+            const responseDataMessage = readResponseDataMessage(maybeAxios.response?.data);
+            if (responseDataMessage) return responseDataMessage;
+
+            if (typeof maybeAxios.message === 'string' && maybeAxios.message.trim().length > 0) {
+                return maybeAxios.message;
+            }
+        }
+
+        return undefined;
+    };
+
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError('');
         setSuccess('');
+
+        if (formConfig.isReferredByRequired && !formData.referredBy.trim()) {
+            setError(t('auth.referredByRequired'));
+            return;
+        }
 
         if (formData.password !== formData.confirmPassword) {
             setError(t('auth.passwordMismatch'));
             return;
         }
 
+        if (formConfig.passwordRegEx) {
+            const passwordRegex = new RegExp(formConfig.passwordRegEx);
+            if (!passwordRegex.test(formData.password)) {
+                setError(formConfig.passwordRegExMessage || t('auth.signupFailed'));
+                return;
+            }
+        }
+
         setIsSubmitting(true);
 
-        await new Promise((resolve) => setTimeout(resolve, 700));
+        try {
+            const signupResponse = await signupService.register(formData);
+            setSuccess(t('auth.signupSuccess'));
 
-        console.info('Dummy signup payload:', formData);
-        setSuccess(t('auth.signupCaptured'));
-        setIsSubmitting(false);
+            window.setTimeout(() => {
+                if (signupResponse.redirectUrl.startsWith('http://') || signupResponse.redirectUrl.startsWith('https://')) {
+                    window.location.assign(signupResponse.redirectUrl);
+                    return;
+                }
+
+                navigate(signupResponse.redirectUrl, {
+                    state: {
+                        fromSignup: true,
+                        message: signupResponse.message,
+                    },
+                });
+            }, 700);
+        } catch (submitError) {
+            const serverMessage = extractServerErrorMessage(submitError);
+
+            if (submitError instanceof SignupError) {
+                if (submitError.code === 'missingBankCredentials') {
+                    setError(t('auth.missingBankCredentials'));
+                } else if (serverMessage) {
+                    setError(serverMessage);
+                } else if (submitError.code === 'usernameExists') {
+                    setError(t('auth.usernameExists'));
+                } else {
+                    setError(t('auth.signupFailed'));
+                }
+            } else if (serverMessage) {
+                setError(serverMessage);
+            } else {
+                setError(t('auth.signupFailed'));
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+
+    const isSubmitDisabled = isSubmitting || isConfigLoading;
+    const notaryNodes: NotaryNode[] = formConfig.notaryNodes;
 
     return (
         <div className="signup-container">
@@ -130,7 +331,6 @@ export const Signup: React.FC = () => {
                             type="email"
                             value={formData.email}
                             onChange={(event) => updateField('email', event.target.value)}
-                            required
                         />
 
                         <label htmlFor="signup-cellphone" className="signup-label">{t('auth.cellphone')}</label>
@@ -162,31 +362,34 @@ export const Signup: React.FC = () => {
                             required
                         />
 
-                        <label htmlFor="signup-referred-by" className="signup-label">{t('auth.referredBy')}</label>
+                        <label htmlFor="signup-referred-by" className={`signup-label ${formConfig.isReferredByRequired ? 'required' : ''}`}>{t('auth.referredBy')}</label>
                         <input
                             id="signup-referred-by"
                             className="signup-input"
                             type="text"
                             value={formData.referredBy}
                             onChange={(event) => updateField('referredBy', event.target.value)}
+                            required={formConfig.isReferredByRequired}
                         />
 
                         <label htmlFor="signup-notary-node" className="signup-label required">{t('auth.notaryNode')}</label>
                         <select
                             id="signup-notary-node"
                             className="signup-input"
-                            value={formData.notaryNode}
-                            onChange={(event) => updateField('notaryNode', event.target.value)}
+                            value={formData.notaryNodeBranchId}
+                            onChange={(event) => updateField('notaryNodeBranchId', event.target.value)}
                             required
                         >
-                            <option value="WinstantGold SX - Sint Maarten">{t('auth.notary.sx')}</option>
-                            <option value="WinstantGold US - United States">{t('auth.notary.us')}</option>
-                            <option value="WinstantGold EU - Europe">{t('auth.notary.eu')}</option>
+                            {notaryNodes.map((node) => (
+                                <option key={node.branchId || node.name} value={node.branchId}>
+                                    {node.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
-                    <button type="submit" className="signup-submit" disabled={isSubmitting}>
-                        {isSubmitting ? t('auth.submitting') : t('auth.submit')}
+                    <button type="submit" className="signup-submit" disabled={isSubmitDisabled}>
+                        {isSubmitDisabled ? t('auth.submitting') : t('auth.submit')}
                     </button>
                 </form>
 

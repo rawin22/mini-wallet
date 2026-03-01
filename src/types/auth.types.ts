@@ -26,6 +26,8 @@ export interface UserSettings {
   cultureCode: string;
   isEnabled: boolean;
   isLockedOut: boolean;
+  passwordRegEx?: string;
+  passwordRegExMessage?: string;
 }
 
 export interface AuthResponse {

@@ -12,7 +12,9 @@ export const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = storage.getAccessToken();
-    if (token && config.headers) {
+    const hasAuthorizationHeader = Boolean(config.headers?.Authorization);
+
+    if (token && config.headers && !hasAuthorizationHeader) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
