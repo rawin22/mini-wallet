@@ -1,0 +1,10 @@
+.venv/
+*.pyc
+.opencode/
+.envp3-virothrachs/
+uv.lock
+.env
+scripts/.env
+code_snippets/
+node_modules/
+dist/

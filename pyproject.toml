@@ -1,0 +1,6 @@
+# IOTONIX standard pyproject .tol settings
+[tool.ruff]
+line-length = 154        # Set the desired line length
+select = ["E", "F", "I"] # Enable error, formatting, and import-related rules
+ignore = []              # Add specific rules to ignore if needed
+target-version = "py312" #
