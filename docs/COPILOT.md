@@ -6,7 +6,7 @@ Use this file to quickly restart work with Copilot if the session is interrupted
 
 You are continuing work in this repository.
 
-1. Read `IMPLEMENTATION_PLAN.md` and `Signup.md` completely.
+1. Read `IMPLEMENTATION_PLAN.md` and `Signup.md` in folder ./docs  completely.
 2. Resume from the first unchecked item in `IMPLEMENTATION_PLAN.md`.
 3. Do not make assumptions: if any requirement or API contract is unclear, stop and ask.
 4. Keep changes minimal and aligned with existing architecture.
