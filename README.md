@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/winstantpay-logo-light.png" alt="WinstantPay Logo" width="280" />
 
-  <h1>WinstantPay Wallet — Mono Repo</h1>
+  <h1>WinstantPay Wallet — Minimal Version</h1>
 
   <p>A modern, multi-environment financial wallet with KYC verification, instant payments, and FX exchange — built for the GPWebApi ecosystem.</p>
 
