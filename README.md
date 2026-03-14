@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="mini-wallet/public/winstantpay-logo-light.png" alt="WinstantPay Logo" width="280" />
+  <img src="public/winstantpay-logo-light.png" alt="WinstantPay Logo" width="280" />
 
   <h1>WinstantPay Wallet — Mono Repo</h1>
 
